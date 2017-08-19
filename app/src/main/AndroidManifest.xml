@@ -16,7 +16,6 @@
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -29,6 +28,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.arfaststudio.prototype.popularmovies.MainActivity"/>
         </activity>
+        <provider
+            android:authorities="com.arfaststudio.prototype.popularmovies"
+            android:name="com.arfaststudio.prototype.popularmovies.data.MovieContentProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

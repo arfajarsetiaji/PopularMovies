@@ -2,8 +2,10 @@ package com.arfaststudio.prototype.popularmovies.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import com.arfaststudio.prototype.popularmovies.DetailActivity;
 import com.arfaststudio.prototype.popularmovies.R;
+import com.arfaststudio.prototype.popularmovies.data.MovieContract;
 import com.arfaststudio.prototype.popularmovies.model.MovieModel;
 import com.bumptech.glide.Glide;
 
@@ -22,8 +25,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
     private Context mContext;
     private ArrayList<MovieModel> listMovie;
+    private Cursor mCursor;
+
+    private static final String TAG = "MovieAdapter";
 
     public MovieAdapter(Context context, ArrayList<MovieModel> listMovie) {
+
         mContext = context;
         this.listMovie = listMovie;
     }
@@ -37,10 +44,25 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
+
+        int judulIndex = mCursor.getColumnIndex(MovieContract.MovielistEntry.COLUMN_JUDUL);
+        int posterIndex = mCursor.getColumnIndex(MovieContract.MovielistEntry.COLUMN_POSTER);
+
+        mCursor.moveToPosition(position);
+
+        String judulFilm = mCursor.getString(judulIndex);
+        String posterFilm = "https://image.tmdb.org/t/p/w500" + mCursor.getString(posterIndex);
+        Log.d(TAG, "onBindViewHolder: " + judulFilm + " " + posterFilm);
+
         // Set data
-        holder.tvjudulMovie.setText(listMovie.get(position).getJudul());
+        // holder.tvjudulMovie.setText(listMovie.get(position).getJudul());
+        holder.tvjudulMovie.setText(judulFilm);
+
         // Glide untuk load gambar dari internet
-        Glide.with(mContext).load(listMovie.get(position).getPoster()).into(holder.ivposterMovie);
+        // Glide.with(mContext).load(listMovie.get(position).getPoster()).into(holder.ivposterMovie);
+        Glide.with(mContext).load(posterFilm).into(holder.ivposterMovie);
+
+
         // Set onClick
         holder.ivposterMovie.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,8 +82,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
 
     @Override
     public int getItemCount() {
-        // Jumlah list
-        return listMovie.size();
+        // jumlah list
+        // return listMovie.size();
+        if(mCursor != null){
+            return mCursor.getCount();
+        }else {
+            return -1;
+        }
+
     }
 
     public class MyViewHolder extends ViewHolder {
@@ -75,5 +103,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
             ivposterMovie = (ImageView) itemView.findViewById(R.id.iv_item_poster);
             tvjudulMovie = (TextView) itemView.findViewById(R.id.tv_item_judul);
         }
+    }
+
+    public void swapCursor(Cursor newCursor) {
+        mCursor = newCursor;
+        notifyDataSetChanged();
     }
 }

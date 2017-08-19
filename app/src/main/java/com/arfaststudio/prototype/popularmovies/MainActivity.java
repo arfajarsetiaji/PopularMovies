@@ -1,7 +1,17 @@
 package com.arfaststudio.prototype.popularmovies;
 
+import android.app.ProgressDialog;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.arfaststudio.prototype.popularmovies.adapter.MovieAdapter;
+import com.arfaststudio.prototype.popularmovies.data.MovieContract;
 import com.arfaststudio.prototype.popularmovies.model.MovieModel;
 
 import org.json.JSONArray;
@@ -23,18 +34,25 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private static final String TAG = "MainActivity";
+    private static final int ID_FILM_LOADER = 100;
 
     RecyclerView mRecyclerView;
     ArrayList<MovieModel> listMovie;
+    // MovieDBHelper mMovieDBHelper;
+    // SQLiteDatabase mSQLiteDatabase;
+    MovieAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        // MovieDBHelper mMovieDBHelper = new MovieDBHelper(this);
+        // SQLiteDatabase mSQLiteDatabase;
         // Dataset
         // 1. Buat model data (MovieModel.java)
         // 2. Arraylist MovieModel
@@ -60,26 +78,31 @@ public class MainActivity extends AppCompatActivity {
         // 4. Tambahkan model ke Arraylist
         listMovie.add(movie1);*/
 
+
+
+
         // Data online
         getDataOnline();
+        getSupportLoaderManager().initLoader(ID_FILM_LOADER, null, this);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        MovieAdapter adapter = new MovieAdapter(MainActivity.this, listMovie);
+        // Adapter
+        // 1. Buat adapter (MovieAdapter.java)
+        adapter = new MovieAdapter(MainActivity.this, listMovie);
         mRecyclerView.setAdapter(adapter);
+
+        // LayoutManager
         mRecyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
-
-
     }
 
     //  Using Volley
     private void getDataOnline() {
-        // final ProgressDialog loading = ProgressDialog.show(MainActivity.this, "Loading", "Mohon Bersabar");
+        final ProgressDialog loading = ProgressDialog.show(MainActivity.this, "Loading", "Mohon Bersabar");
         String url = "https://api.themoviedb.org/3/movie/popular?api_key=bccd5b3bc9c3658bab941eeb0e1be99c&language=en-US&page=1";
 
         JsonObjectRequest ambilData = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                // loading.hide();
+                loading.hide();
                 try {
                     JSONArray arrayResults = response.getJSONArray("results");
                     for (int i = 0; i < arrayResults.length() ; i++) {
@@ -94,13 +117,15 @@ public class MainActivity extends AppCompatActivity {
                         movie.setOverview(jsonObject.getString("overview"));
                         listMovie.add(movie);
 
-                        // Adapter
-                        // 1. Buat adapter (MovieAdapter.java)
-                        MovieAdapter adapter = new MovieAdapter(MainActivity.this, listMovie);
-                        mRecyclerView.setAdapter(adapter);
-
-                        // LayoutManager
-                        mRecyclerView.setLayoutManager(new GridLayoutManager(MainActivity.this, 2));
+                        // Insert data to sqlite
+                        ContentValues cv = new ContentValues();
+                        cv.put(MovieContract.MovielistEntry.COLUMN_JUDUL, jsonObject.getString("title"));
+                        cv.put(MovieContract.MovielistEntry.COLUMN_POSTER, jsonObject.getString("poster_path"));
+                        cv.put(MovieContract.MovielistEntry.COLUMN_RATING, jsonObject.getString("vote_average"));
+                        cv.put(MovieContract.MovielistEntry.COLUMN_RELEASE_DATE, jsonObject.getString("release_date"));
+                        cv.put(MovieContract.MovielistEntry.COLUMN_OVERVIEW, jsonObject.getString("overview"));
+                        Uri uri = getContentResolver().insert(MovieContract.MovielistEntry.CONTENT_URI, cv);
+                        Toast.makeText(MainActivity.this, uri.toString(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -151,4 +176,31 @@ public class MainActivity extends AppCompatActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        switch (id) {
+            case ID_FILM_LOADER:
+                Uri fileUri = MovieContract.MovielistEntry.CONTENT_URI;
+                return new CursorLoader(this, fileUri, null, null, null, null);
+            default:
+                throw new RuntimeException("Loader not implemented" + id);
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        Log.d(TAG, "onLoadFinished: "+ data.getColumnNames());
+        adapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+    }
+
+    private boolean isNetworkConnected() {
+    ConnectivityManager connMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+    return networkInfo != null && networkInfo.isConnected();
+}
 }

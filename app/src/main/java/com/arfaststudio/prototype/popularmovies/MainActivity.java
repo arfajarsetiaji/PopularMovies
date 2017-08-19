@@ -14,6 +14,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.arfaststudio.prototype.popularmovies.adapter.MovieAdapter;
+import com.arfaststudio.prototype.popularmovies.model.MovieModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
                         MovieModel movie = new MovieModel();
                         movie.setJudul(jsonObject.getString("title"));
                         movie.setPoster(jsonObject.getString("poster_path"));
+                        movie.setRating(jsonObject.getString("vote_average"));
+                        movie.setReleaseDate(jsonObject.getString("release_date"));
+                        movie.setOverview(jsonObject.getString("overview"));
                         listMovie.add(movie);
 
                         // Adapter

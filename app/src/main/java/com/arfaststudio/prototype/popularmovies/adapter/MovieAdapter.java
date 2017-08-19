@@ -1,4 +1,4 @@
-package com.arfaststudio.prototype.popularmovies;
+package com.arfaststudio.prototype.popularmovies.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arfaststudio.prototype.popularmovies.DetailActivity;
+import com.arfaststudio.prototype.popularmovies.R;
+import com.arfaststudio.prototype.popularmovies.model.MovieModel;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
@@ -47,6 +50,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyViewHolder
                 // Kirim data
                 intent.putExtra("JUDUL", listMovie.get(position).getJudul());
                 intent.putExtra("POSTER", listMovie.get(position).getPoster());
+                intent.putExtra("RATING", listMovie.get(position).getRating());
+                intent.putExtra("RELEASE_DATE", listMovie.get(position).getReleaseDate());
+                intent.putExtra("OVERVIEW", listMovie.get(position).getOverview());
                 mContext.startActivity(intent);
             }
         });

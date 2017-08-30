@@ -1,11 +1,46 @@
 <resources>
-    <string name="app_name">PopularMovies</string>
+    <!-- Application. -->
+    <string name="app_name">Popular Movies</string>
+
+    <!-- Activity. -->
     <string name="title_activity_detail">DetailActivity</string>
-    <string name="rating_label">Rating</string>
-    <string name="rating_placeholder">Rating</string>
-    <string name="release_date_label">Release Date</string>
-    <string name="release_date_placeholder">Release Date</string>
-    <string name="overview_label">Overview</string>
-    <string name="overview_placeholder">Overview</string>
-    <string name="action_settings">Settings</string>
+
+    <!-- Theme mode. -->
+    <string name="theme_mode_night">Night Mode</string>
+    <string name="theme_mode_day">Day Mode</string>
+
+    <!-- Label. -->
+    <string name="label_vote_count">Vote Count</string>
+    <string name="label_id">Id</string>
+    <string name="label_video">Video</string>
+    <string name="label_vote_average">Vote Average</string>
+    <string name="label_title">Title</string>
+    <string name="label_popularity">Popularity</string>
+    <string name="label_poster_path">Poster Path</string>
+    <string name="label_original_language">Original Language</string>
+    <string name="label_original_title">Original Title</string>
+    <string name="label_genre_ids">Genre Id\'s</string>
+    <string name="label_backdrop_path">Backdrop Path</string>
+    <string name="label_adult">Adult</string>
+    <string name="label_release_date">Release Date</string>
+    <string name="label_overview">Overview</string>
+
+    <!-- URL. -->
+    <string name="url_my_api_key">bccd5b3bc9c3658bab941eeb0e1be99c</string>
+    <string name="url_movie_most_popular"><![CDATA[https://api.themoviedb.org/3/movie/popular?api_key=bccd5b3bc9c3658bab941eeb0e1be99c&language=en-US&page=1]]></string>
+    <string name="url_movie_top_rated"><![CDATA[https://api.themoviedb.org/3/movie/top_rated?api_key=bccd5b3bc9c3658bab941eeb0e1be99c&language=en-US&page=1]]></string>
+    <string name="url_movie_image">https://image.tmdb.org/t/p/w500</string>
+    <string name="url_movie_videos_prefix">"https://api.themoviedb.org/3/movie/"</string>
+    <string name="url_movie_videos_suffix">"/videos?api_key=bccd5b3bc9c3658bab941eeb0e1be99c"</string>
+    <string name="url_movie_reviews_prefix">https://api.themoviedb.org/3/movie/</string>
+    <string name="url_movie_reviews_suffix">/reviews?api_key=bccd5b3bc9c3658bab941eeb0e1be99c</string>
+
+    <!-- Message. -->
+    <string name="item_loading_message">(Loading...)</string>
+
+    <!-- Bottom Navigation View-->
+    <string name="label_most_popular">Most Popular</string>
+    <string name="label_top_rated">Top Rated</string>
+    <string name="label_favorite">Favorite</string>
+
 </resources>

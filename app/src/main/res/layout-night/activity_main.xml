@@ -31,7 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/bottom_navigation_view"
-            android:saveEnabled="true"
             android:animateLayoutChanges="true">
         </FrameLayout>
 
@@ -40,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="#F5F5F5"
+            android:background="#212121"
             android:saveEnabled="false"
             app:elevation="@dimen/bottom_navigation_elevation"
             app:theme="@style/AppTheme.BottomNavigation"

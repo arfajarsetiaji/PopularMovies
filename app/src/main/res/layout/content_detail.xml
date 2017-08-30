@@ -1,73 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detail_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.arfaststudio.prototype.popularmovies.DetailActivity"
+    tools:context="com.arfajarsetiaji.android.popularmovies.DetailActivity"
     tools:showIn="@layout/activity_detail">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/grid_side_margin"
+        android:layout_marginLeft="@dimen/keylines"
+        android:layout_marginStart="@dimen/keylines"
+        android:layout_marginRight="@dimen/keylines"
+        android:layout_marginEnd="@dimen/keylines"
+        android:layout_marginBottom="64dp"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/text_margin"
-            android:layout_marginLeft="@dimen/text_margin"
-            android:layout_marginStart="@dimen/text_margin"
-            android:text="@string/rating_label"
-            android:textAllCaps="true"
-            android:textStyle="bold"/>
+        <include layout="@layout/card_content_detail_1"/>
 
-        <TextView
-            android:id="@+id/tv_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/text_margin"
-            android:layout_marginStart="@dimen/text_margin"
-            android:layout_marginBottom="@dimen/text_margin"
-            android:text="@string/rating_placeholder"/>
+        <include layout="@layout/card_content_detail_2"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/text_margin"
-            android:layout_marginStart="@dimen/text_margin"
-            android:text="@string/release_date_label"
-            android:textAllCaps="true"
-            android:textStyle="bold"/>
+        <include layout="@layout/card_content_detail_3"/>
 
-        <TextView
-            android:id="@+id/tv_release_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/text_margin"
-            android:layout_marginStart="@dimen/text_margin"
-            android:layout_marginBottom="@dimen/text_margin"
-            android:text="@string/release_date_placeholder"/>
+        <include layout="@layout/card_content_detail_4"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/text_margin"
-            android:layout_marginStart="@dimen/text_margin"
-            android:text="@string/overview_label"
-            android:textAllCaps="true"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/tv_overview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/text_margin"
-            android:layout_marginStart="@dimen/text_margin"
-            android:layout_marginBottom="@dimen/text_margin"
-            android:text="@string/overview_placeholder"/>
     </LinearLayout>
-
-</android.support.v4.widget.NestedScrollView>
+</ScrollView>

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.arfaststudio.prototype.popularmovies">
+          package="com.arfajarsetiaji.android.popularmovies">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+        android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:supportsRtl="true">
         <activity
-            android:name=".MainActivity"
+            android:name="com.arfajarsetiaji.android.popularmovies.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -20,17 +21,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DetailActivity"
+            android:name="com.arfajarsetiaji.android.popularmovies.DetailActivity"
             android:label="@string/title_activity_detail"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName="com.arfajarsetiaji.android.popularmovies.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|screenSize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.arfaststudio.prototype.popularmovies.MainActivity"/>
+                android:value="com.arfajarsetiaji.android.popularmovies.MainActivity"/>
         </activity>
         <provider
-            android:authorities="com.arfaststudio.prototype.popularmovies"
-            android:name="com.arfaststudio.prototype.popularmovies.data.MovieContentProvider"
+            android:authorities="com.arfajarsetiaji.android.popularmovies"
+            android:name="com.arfajarsetiaji.android.popularmovies.data.MoviesContentProvider"
             android:exported="false"/>
     </application>
 

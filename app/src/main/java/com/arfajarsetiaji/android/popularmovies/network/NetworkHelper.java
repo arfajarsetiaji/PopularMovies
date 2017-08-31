@@ -30,7 +30,7 @@ public class NetworkHelper {
     private static final String mPathImageSize = "w500";
 
     private static final String mParamApikeyKey = "api_key";
-    private static final String mParamApikeyValue = "bccd5b3bc9c3658bab941eeb0e1be99c";
+    private static final String mParamApikeyValue = "INSERT_YOUR_OWN_API_KEY_HERE";
     private static final String mParamLanguageKey = "language";
     private static final String mParamLanguageDefaultValue = "en-US";
     private static final String mParamPageKey = "page";

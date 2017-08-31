@@ -116,16 +116,6 @@ public class TopRatedFragment extends Fragment {
      * */
 
     private void setupRecyclerViewLayout() {
-        // Buat RecyclerView menjadi 2 kolom per baris jika orientasi portrait
-        // 4 kolom per baris jika orientasi landscape.
-        // TODO: 30-Aug-17 Ada bug, hasil berbeda tergantung day mode / night mode
-/*        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mGridLayoutManager = new GridLayoutManager(getActivity(), 2);
-            mRecyclerView.setLayoutManager(mGridLayoutManager);
-        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mGridLayoutManager = new GridLayoutManager(getActivity(), 4);
-            mRecyclerView.setLayoutManager(mGridLayoutManager);
-        }*/
         mGridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
     }

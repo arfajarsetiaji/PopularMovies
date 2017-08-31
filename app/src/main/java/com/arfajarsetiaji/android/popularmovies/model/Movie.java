@@ -2,6 +2,7 @@ package com.arfajarsetiaji.android.popularmovies.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Created by Ar Fajar Setiaji on 27-Aug-17.
@@ -12,7 +13,7 @@ import android.os.Parcelable;
  * Implements parcelable agar object movie dapat dikirim dengan bundle menggunakan intent.
  */
 
-public class Movie implements Parcelable{
+public class Movie implements Parcelable, Comparable<Movie>{
 
     private String movieId;
     private String originalLanguage;
@@ -207,5 +208,16 @@ public class Movie implements Parcelable{
         dest.writeString(posterPath);
         dest.writeString(backdropPath);
         dest.writeString(movieImageUrlPrefix);
+    }
+
+    @Override
+    public int compareTo(@NonNull Movie m) {
+        if (Integer.parseInt(movieId) > Integer.parseInt(m.movieId)) {
+            return 1;
+        } else if (Integer.parseInt(movieId) < Integer.parseInt(m.movieId)) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 }

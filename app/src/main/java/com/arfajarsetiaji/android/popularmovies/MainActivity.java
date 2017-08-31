@@ -1,13 +1,11 @@
 package com.arfajarsetiaji.android.popularmovies;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -48,20 +46,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     /**
-     * Fungsi untuk menentukan mode yang digunakan (Day mode / Night mode).
-     */
-
-    private void setDefaultNightModeState() {
-        // Ambil data mode (Day mode / Night mode) yang terakhir dipilih dari SharedPreferences,
-        // lalu terapkan mode tersebut.
-        SharedPreferences mainPreferences = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE);
-        Boolean nightModeState = mainPreferences.getBoolean("nightMode", false);
-        if(nightModeState) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
-    }
-
-    /**
      * Fungsi untuk menentukan Fragment yang pertama tampil saat activity dijalankan,
      * jika MainActivity direstart oleh system.
      * */
@@ -92,34 +76,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initialization();
-        // setDefaultNightModeState();
         setDefaultPage(savedInstanceState);
         Log.d(TAG, "onCreate: Called");
-    }
-
-    @Override
-    protected void onStart() {
-        Log.d(TAG, "onStart: Called");
-        super.onStart();
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         Log.d(TAG, "onRestoreInstanceState: Called");
         super.onRestoreInstanceState(savedInstanceState);
-    }
-
-
-    @Override
-    protected void onResume() {
-        Log.d(TAG, "onResume: Called");
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        Log.d(TAG, "onPause: Called");
-        super.onPause();
     }
 
     @Override
@@ -131,23 +95,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    protected void onStop() {
-        Log.d(TAG, "onStop: Called");
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.d(TAG, "onDestroy: Called");
-        super.onDestroy();
-    }
-
-
     /**
      * Override fungsi - fungsi callback.
      */
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {

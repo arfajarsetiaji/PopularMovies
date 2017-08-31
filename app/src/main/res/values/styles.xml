@@ -1,11 +1,11 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#ffffff</item>
-        <item name="colorPrimaryDark">#e0e0e0</item>
-        <item name="colorAccent">#607d8b</item>
+        <item name="colorPrimary">#E62117</item>
+        <item name="colorPrimaryDark">#BA1B12</item>
+        <item name="colorAccent">#CD201F</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -16,6 +16,11 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="ToolbarWhiteIcon" parent="AppTheme">
+        <item name="android:background">#E62117</item>
+        <item name="android:textColorSecondary">#FFFFFF</item>
+    </style>
 
     <style name="AppTheme.BottomNavigation" parent="AppTheme">
         <item name="colorPrimary">?attr/colorAccent</item>

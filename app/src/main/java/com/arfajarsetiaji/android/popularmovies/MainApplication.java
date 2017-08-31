@@ -48,6 +48,8 @@ public class MainApplication extends Application{
         editor.putInt("mGridLayoutTopViewMp", 0);
         editor.putInt("mGridLayoutPositionIndexTr", 0);
         editor.putInt("mGridLayoutTopViewTr", 0);
+        editor.putInt("mGridLayoutPositionIndexF", 0);
+        editor.putInt("mGridLayoutTopViewF", 0);
         editor.apply();
     }
 

@@ -22,16 +22,11 @@ public class MoviesContentProvider extends ContentProvider {
 
     public static final int ALL_FILM = 100;
     public static final int FILM_WITH_ID = 101;
-
     private static final UriMatcher sUriMatcher = buildUriMatcher();
-
     public static UriMatcher buildUriMatcher() {
-
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-
         uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_TASKS, ALL_FILM);
         uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_TASKS + "/#", FILM_WITH_ID);
-
         return uriMatcher;
     }
 
@@ -76,10 +71,8 @@ public class MoviesContentProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
         final SQLiteDatabase db = mMoviesDBHelper.getWritableDatabase();
-
         int match = sUriMatcher.match(uri);
         Uri returnUri;
-
         switch (match) {
             case ALL_FILM:
                 long id = db.insert(MoviesContract.MoviesEntry.TABLE_NAME, null, contentValues);
@@ -93,9 +86,7 @@ public class MoviesContentProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-
         getContext().getContentResolver().notifyChange(uri, null);
-
         return returnUri;
     }
 
@@ -103,40 +94,27 @@ public class MoviesContentProvider extends ContentProvider {
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
         final SQLiteDatabase db = mMoviesDBHelper.getWritableDatabase();
         int numRowsDeleted;
-
         if (null == selection) selection = "1";
-
         switch (sUriMatcher.match(uri)) {
-
             case ALL_FILM:
                 numRowsDeleted = mMoviesDBHelper.getWritableDatabase().delete(
                         MoviesContract.MoviesEntry.TABLE_NAME,
                         selection,
                         selectionArgs);
-
-                // reset _ID
                 db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + MoviesContract.MoviesEntry.TABLE_NAME + "'");
-
                 break;
-
             case FILM_WITH_ID:
                 numRowsDeleted = db.delete(MoviesContract.MoviesEntry.TABLE_NAME, MoviesContract.MoviesEntry.COLUMN_MOVIE_ID + " = ?",
                         new String[]{String.valueOf(ContentUris.parseId(uri))});
-
-                // reset _ID
                 db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" + MoviesContract.MoviesEntry.TABLE_NAME + "'");
-
                 break;
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-
-        /* If we actually deleted any rows, notify that a change has occurred to this URI */
         if (numRowsDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
-
         return numRowsDeleted;
     }
 

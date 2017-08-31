@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -91,11 +92,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
                                 // Isi List<MovieVideo> dengan data dari JsonObject.
                                 mMovieVideos.add(movieVideo);
-                                setupVideoLinks();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        setupVideoLinks();
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -124,11 +125,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
                                 // Isi List<MovieReview> dengan semua data dari JsonObject.
                                 mMovieReviews.add(movieReview);
-                                setupReviews();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        setupReviews();
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -169,6 +170,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         mMovieVideos = new ArrayList<>();
         mMovieReviews = new ArrayList<>();
 
+        SharedPreferences mainPreferences = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE);
+        if (mainPreferences.getBoolean(mMovie.getMovieId() + "SudahAdaDiDatabase", false)) {
+            mFabFavorite.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this, R.drawable.ic_favorite_white));
+        } else {
+            mFabFavorite.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this, R.drawable.ic_favorite_border));
+        }
         mFabFavorite.setOnClickListener(DetailActivity.this);
         String backdropPath = mMovie.getBackdropPath();
         Glide.with(DetailActivity.this).load(backdropPath).dontTransform().diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -217,7 +224,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      */
     void setupVideoLinks() {
         int totalMovieVideos = mMovieVideos.size();
-        if (totalMovieVideos == 0) {
+        Log.d(TAG, "setupVideoLinks: " + totalMovieVideos);
+        if (totalMovieVideos <= 0) {
             // Tampilkan pesan saat tidak ada daftar video untuk Movie yang dipilih.
             mTvPlaceholderVideos.setText("No video for this movie.");
         } else {
@@ -258,7 +266,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
      */
     private void setupReviews() {
         int totalMovieReviews = mMovieReviews.size();
-        if (totalMovieReviews == 0) {
+        Log.d(TAG, "setupReviews: " + totalMovieReviews);
+        if (totalMovieReviews <= 0) {
             // Tampilkan pesan pada TextView status jika tidak ada review untuk Movie yang dipilih.
             mTvPlaceholderReviews.setText("No reviews for this movie.");
         } else {
@@ -352,12 +361,14 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     SharedPreferences.Editor editor = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE).edit();
                     editor.putBoolean(key, false);
                     editor.apply();
+                    mFabFavorite.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this, R.drawable.ic_favorite_border));
                 } else {
                     addToDatabase();
                     Log.d(TAG, "onClick: add to db");
                     SharedPreferences.Editor editor = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE).edit();
                     editor.putBoolean(key, true);
                     editor.apply();
+                    mFabFavorite.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this, R.drawable.ic_favorite_white));
                 }
 
                 break;

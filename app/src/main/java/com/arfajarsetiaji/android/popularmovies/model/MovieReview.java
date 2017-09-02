@@ -2,24 +2,30 @@ package com.arfajarsetiaji.android.popularmovies.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-/**
- * Created by Ar Fajar Setiaji on 29-Aug-17.
- */
-
-/**
- * Struktur POJO MovieReview == JsonObject dari Movie Review.
- * Implements parcelable agar object movie dapat dikirim dengan bundle menggunakan intent.
- */
+import android.util.Log;
 
 public class MovieReview implements Parcelable{
+    private static final String TAG = "MovieReview";
+    public static final Creator<MovieReview> CREATOR = new Creator<MovieReview>() {
+        @Override
+        public MovieReview createFromParcel(Parcel in) {
+            Log.d(TAG, "createFromParcel: Called.");
+            return new MovieReview(in);
+        }
 
+        @Override
+        public MovieReview[] newArray(int size) {
+            Log.d(TAG, "newArray: Called.");
+            return new MovieReview[size];
+        }
+    };
     private String id;
     private String author;
     private String content;
     private String url;
 
     public MovieReview() {
+        Log.d(TAG, "MovieReview: Called.");
     }
 
     protected MovieReview(Parcel in) {
@@ -27,54 +33,42 @@ public class MovieReview implements Parcelable{
         author = in.readString();
         content = in.readString();
         url = in.readString();
+        Log.d(TAG, "MovieReview: Called.");
     }
 
-    public static final Creator<MovieReview> CREATOR = new Creator<MovieReview>() {
-        @Override
-        public MovieReview createFromParcel(Parcel in) {
-            return new MovieReview(in);
-        }
-
-        @Override
-        public MovieReview[] newArray(int size) {
-            return new MovieReview[size];
-        }
-    };
-
     public String getId() {
+        Log.d(TAG, "getId: " + id);
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getAuthor() {
-        return author;
+        Log.d(TAG, "setId: " + id);
     }
 
     public void setAuthor(String author) {
         this.author = author;
+        Log.d(TAG, "setAuthor: " + author);
     }
 
     public String getContent() {
+        Log.d(TAG, "getContent: " + content);
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public String getUrl() {
-        return url;
+        Log.d(TAG, "setContent: " + content);
     }
 
     public void setUrl(String url) {
         this.url = url;
+        Log.d(TAG, "setUrl: " + url);
     }
 
     @Override
     public int describeContents() {
+        Log.d(TAG, "describeContents: Called.");
         return 0;
     }
 
@@ -84,5 +78,6 @@ public class MovieReview implements Parcelable{
         dest.writeString(author);
         dest.writeString(content);
         dest.writeString(url);
+        Log.d(TAG, "writeToParcel: Called.");
     }
 }

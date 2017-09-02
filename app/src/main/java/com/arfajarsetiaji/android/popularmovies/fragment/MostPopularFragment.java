@@ -32,46 +32,32 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class MostPopularFragment extends Fragment {
     private static final String TAG = "MostPopularFragment";
+    private static final String KEY_MOST_POPULAR_LAYOUT_TOP_VIEW = "KEY_MOST_POPULAR_LAYOUT_TOP_VIEW";
+    private static final String KEY_MOST_POPULAR_LAYOUT_POSITION_INDEX = "KEY_MOST_POPULAR_LAYOUT_POSITION_INDEX";
 
     List<Movie> mMovies;
     MovieGridAdapter mMovieGridAdapter;
     GridLayoutManager mGridLayoutManager;
     RecyclerView mRecyclerView;
-    private int mGridLayoutPositionIndexMp;
-    private int mGridLayoutTopViewMp;
+    private int mMostPopularLayoutPositionIndex, mMostPopularLayoutTopView;
     private JsonObjectRequest mJsonObjectRequest;
 
-    /**
-     * Default constructor MostPopularFragment class.
-     */
-
     public MostPopularFragment() {
-        // Required empty public constructor
+        Log.d(TAG, "MostPopularFragment: Called.");
     }
 
-    /**
-     * Inisialisasi awal MostPopularFragment.
-     */
-
-    private void initialization(LayoutInflater inflater, ViewGroup container) {
+    private void initializeFragment(LayoutInflater inflater, ViewGroup container) {
         mRecyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
-
         mMovies = new ArrayList<>();
         mMovieGridAdapter = new MovieGridAdapter(getActivity(), mMovies);
-
-        // JsonObjectRequest video dari MostPopularMovie.
         mJsonObjectRequest =
                 new JsonObjectRequest(Request.Method.GET, NetworkHelper.getMostPopularMovieJsonObjectUrl(), null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            // Ambil JsonArray dengan key "results".
                             JSONArray arrayResults = response.getJSONArray("results");
                             for (int i = 0; i < arrayResults.length() ; i++) {
-                                // Buat JsonObject dari setiap anggota JsonArray.
                                 JSONObject jsonObject = arrayResults.getJSONObject(i);
-
-                                // Buat object Movie dari setiap data video yang diambil dari JsonObject.
                                 Movie movie = new Movie();
                                 movie.setMovieId(jsonObject.getString("id"));
                                 movie.setOriginalLanguage(jsonObject.getString("original_language"));
@@ -88,14 +74,11 @@ public class MostPopularFragment extends Fragment {
                                 movie.setPosterPath(jsonObject.getString("poster_path"));
                                 movie.setBackdropPath(jsonObject.getString("backdrop_path"));
                                 movie.setMovieImageUrlPrefix(NetworkHelper.getImageUrlPrefix());
-
-                                // Isi List<Movie> dengan data dari JsonObject.
                                 mMovies.add(movie);
                                 if (i == arrayResults.length() - 1) {
-                                    // Notify RecyclerView.Adapter saat loop terakhir berjalan.
                                     mMovieGridAdapter.notifyDataSetChanged();
                                 }
-                                Log.d(TAG, "onResponse: new movie (" + movie.getOriginalTitle() + ") added to movies");
+                                Log.d(TAG, "onResponse: Called.");
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -104,70 +87,59 @@ public class MostPopularFragment extends Fragment {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.d(TAG, "onErrorResponse: Called.");
                     }
                 });
 
         mRecyclerView.setAdapter(mMovieGridAdapter);
         mRecyclerView.setHasFixedSize(true);
+        Log.d(TAG, "initializeFragment: Called.");
     }
-
-    /**
-     * Fungsi untuk setup RecyclerView menggunakan GridLayoutManager.
-     * */
 
     private void setupRecyclerViewLayout() {
         mGridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mRecyclerView.setLayoutManager(mGridLayoutManager);
+        Log.d(TAG, "setupRecyclerViewLayout: Called.");
     }
-
-    /**
-     * Fungsi untuk request ulang data JsonObject dari server.
-     * */
 
     private void refreshMovies() {
         RequestQueue requestQueue = MainApplication.getRequestQueue();
         requestQueue.add(mJsonObjectRequest);
+        Log.d(TAG, "refreshMovies: Called.");
     }
-
-    /**
-     * Override fungsi - fungsi Activity lifecycle & Fragment lifecycle
-     * */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        initialization(inflater, container);
+        initializeFragment(inflater, container);
         refreshMovies();
         setupRecyclerViewLayout();
-
         SharedPreferences mainPreferences = getActivity().getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE);
-        mGridLayoutPositionIndexMp = mainPreferences.getInt("mGridLayoutPositionIndexMp", 0);
-        mGridLayoutTopViewMp = mainPreferences.getInt("mGridLayoutTopViewMp", 0);
-
-        Log.d(TAG, "onCreateView: Called");
+        mMostPopularLayoutTopView = mainPreferences.getInt(KEY_MOST_POPULAR_LAYOUT_TOP_VIEW, 0);
+        mMostPopularLayoutPositionIndex = mainPreferences.getInt(KEY_MOST_POPULAR_LAYOUT_POSITION_INDEX, 0);
+        Log.d(TAG, "onCreateView: Called.");
         return mRecyclerView;
     }
 
     @Override
     public void onResume() {
-        if (mGridLayoutPositionIndexMp != -1) {
-            mGridLayoutManager.scrollToPositionWithOffset(mGridLayoutPositionIndexMp, mGridLayoutTopViewMp);
+        if (mMostPopularLayoutPositionIndex != -1) {
+            mGridLayoutManager.scrollToPositionWithOffset(mMostPopularLayoutPositionIndex, mMostPopularLayoutTopView);
         }
         super.onResume();
+        Log.d(TAG, "onResume: Called.");
     }
 
     @Override
     public void onPause() {
-        mGridLayoutPositionIndexMp = mGridLayoutManager.findFirstVisibleItemPosition();
+        mMostPopularLayoutPositionIndex = mGridLayoutManager.findFirstVisibleItemPosition();
         View startView = mRecyclerView.getChildAt(0);
-        mGridLayoutTopViewMp = (startView == null) ? 0 : (startView.getTop() - mRecyclerView.getPaddingTop());
-
-        SharedPreferences.Editor editor = getActivity().getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE).edit();
-        editor.putInt("mGridLayoutPositionIndexMp", mGridLayoutPositionIndexMp);
-        editor.putInt("mGridLayoutTopViewMp", mGridLayoutTopViewMp);
+        mMostPopularLayoutTopView = (startView == null) ? 0 : (startView.getTop() - mRecyclerView.getPaddingTop());
+        SharedPreferences.Editor editor = getActivity().getSharedPreferences(MainApplication.getNameMainPreference(), MainApplication.getModeMainPreferencePrivate()).edit();
+        editor.putInt(KEY_MOST_POPULAR_LAYOUT_TOP_VIEW, mMostPopularLayoutTopView);
+        editor.putInt(KEY_MOST_POPULAR_LAYOUT_POSITION_INDEX, mMostPopularLayoutPositionIndex);
         editor.apply();
-
         super.onPause();
-        Log.d(TAG, "onPause: called");
+        Log.d(TAG, "onPause: Called.");
     }
 }

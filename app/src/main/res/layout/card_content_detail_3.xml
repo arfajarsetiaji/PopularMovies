@@ -4,11 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/keylines"
     android:layout_gravity="center"
+    android:layout_marginTop="@dimen/keylines"
     android:foreground="?attr/selectableItemBackground"
     card_view:cardCornerRadius="@dimen/cardCornerRadius"
     card_view:cardElevation="@dimen/cardElevation"
@@ -42,8 +41,8 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/item_loading_message"
-                android:textColor="@color/white"
                 android:textAlignment="center"
+                android:textColor="@color/white"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -71,15 +70,15 @@
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginLeft="0dp"
                 android:layout_marginRight="0dp"
                 android:layout_marginTop="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_placeholder_trailer"
-                app:layout_constraintVertical_bias="0.0"
-                android:layout_marginLeft="0dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintHorizontal_bias="0.0">
+                app:layout_constraintVertical_bias="0.0">
 
                  <LinearLayout
                     android:id="@+id/ll_placeholder_trailer"

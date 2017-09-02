@@ -16,112 +16,123 @@ import com.arfajarsetiaji.android.popularmovies.fragment.FavoriteFragment;
 import com.arfajarsetiaji.android.popularmovies.fragment.MostPopularFragment;
 import com.arfajarsetiaji.android.popularmovies.fragment.TopRatedFragment;
 
-/**
- * Activity utama yang berisi MostPopularFragment, TopRatedFragment, Favorite Fragment + BottomNavigationView.
- */
-
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
     private static final String TAG = "MainActivity";
+    private static final String KEY_DISPLAYED_FRAGMENT_ID = "SELECTED_FRAGMENT";
 
     FrameLayout mFrameLayout;
     BottomNavigationView mBottomNavigationView;
-    Fragment mSelectedFragment;
+    Fragment mDisplayedFragment;
 
-    int mSelectedPage;
+    int mDisplayedFragmentId;
 
-    /**
-     * Inisialisasi awal Activity.
-     */
-
-    private void initialization() {
+    private void initializeActivity(Bundle savedInstanceState ) {
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         mFrameLayout = (FrameLayout) findViewById(R.id.frame_layout);
         mBottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
-        mSelectedFragment = null;
 
+        setSupportActionBar(toolbar);
         mBottomNavigationView.setOnNavigationItemSelectedListener(MainActivity.this);
-    }
-
-    /**
-     * Fungsi untuk menentukan Fragment yang pertama tampil saat activity dijalankan,
-     * jika MainActivity direstart oleh system.
-     * */
-
-    private void setDefaultPage(Bundle savedInstanceState) {
-        // Ambil posisi terakhir fragment yang ditampilkan dari savedInstanceState,
-        // lalu tampilkan fragment tersebut.
         if (savedInstanceState != null) {
-            mSelectedPage = savedInstanceState.getInt("SELECTED_PAGE");
+            switch (savedInstanceState.getInt(KEY_DISPLAYED_FRAGMENT_ID)) {
+                case 0:
+                    View mostPopularFragment = mBottomNavigationView.findViewById(R.id.action_top_rated_movies);
+                    mostPopularFragment.performClick();
+                    break;
+                case 1:
+                    View topRatedFragment = mBottomNavigationView.findViewById(R.id.action_favorite_movies);
+                    topRatedFragment.performClick();
+                    break;
+                case 2:
+                    View favoriteFaragment = mBottomNavigationView.findViewById(R.id.action_most_popular_movies);
+                    favoriteFaragment.performClick();
+                    break;
+            }
         }
-        if (mSelectedPage == 1) {
-            View view = mBottomNavigationView.findViewById(R.id.action_top_rated_movies);
-            view.performClick();
-        } else if (mSelectedPage == 2) {
-            View view = mBottomNavigationView.findViewById(R.id.action_favorite_movies);
-            view.performClick();
-        } else {
-            View view = mBottomNavigationView.findViewById(R.id.action_most_popular_movies);
-            view.performClick();
-        }
+        Log.d(TAG, "initializeActivity: Called.");
     }
-
-    /**
-     * Override fungsi- fungsi Activity lifecycle.
-     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initialization();
-        setDefaultPage(savedInstanceState);
-        Log.d(TAG, "onCreate: Called");
+        initializeActivity(savedInstanceState);
+        Log.d(TAG, "onCreate: Called.");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart: Called.");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: Called.");
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        Log.d(TAG, "onRestoreInstanceState: Called");
         super.onRestoreInstanceState(savedInstanceState);
+        Log.d(TAG, "onRestoreInstanceState: Called.");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: Called.");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: Called.");
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.d(TAG, "onSaveInstanceState: Called");
-        // Simpan posisi fragment yang terakhir ditampilkan di outstate,
-        // jika MainActivity dimatikan oleh system.
-        outState.putInt("SELECTED_PAGE", mSelectedPage);
+        outState.putInt(KEY_DISPLAYED_FRAGMENT_ID, mDisplayedFragmentId);
         super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState: Called.");
     }
 
-    /**
-     * Override fungsi - fungsi callback.
-     */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: Called.");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy: Called.");
+        super.onDestroy();
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Ganti fragment yang ditampilkan pada MainActivity berdasarkan item BottomNavigationView yang dipilih.
         switch (item.getItemId()) {
             case R.id.action_most_popular_movies:
-                Log.d(TAG, "onNavigationItemSelected: item 1 clicked");
-                mSelectedPage = 0;
-                mSelectedFragment = new MostPopularFragment();
+                mDisplayedFragmentId = 0;
+                mDisplayedFragment = new MostPopularFragment();
+                Log.d(TAG, "onNavigationItemSelected: Most popular movies selected.");
                 break;
             case R.id.action_top_rated_movies:
-                Log.d(TAG, "onNavigationItemSelected: item 2 clicked");
-                mSelectedPage = 1;
-                mSelectedFragment = new TopRatedFragment();
+                mDisplayedFragmentId = 1;
+                mDisplayedFragment = new TopRatedFragment();
+                Log.d(TAG, "onNavigationItemSelected: Top rated movies selected.");
                 break;
             case R.id.action_favorite_movies:
-                Log.d(TAG, "onNavigationItemSelected: item 3 clicked");
-                mSelectedPage = 2;
-                mSelectedFragment = new FavoriteFragment();
+                mDisplayedFragmentId = 2;
+                mDisplayedFragment = new FavoriteFragment();
+                Log.d(TAG, "onNavigationItemSelected: Favorite movies selected.");
                 break;
         }
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(mFrameLayout.getId(), mSelectedFragment);
+        transaction.replace(mFrameLayout.getId(), mDisplayedFragment);
         transaction.commit();
+        Log.d(TAG, "onNavigationItemSelected: Called.");
         return true;
     }
 }

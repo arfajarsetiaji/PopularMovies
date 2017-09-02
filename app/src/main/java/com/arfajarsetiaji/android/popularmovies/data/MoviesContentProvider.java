@@ -10,19 +10,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-
-/**
- * Created by Ar Fajar Setiaji on 19-Aug-17.
- */
+import android.util.Log;
 
 public class MoviesContentProvider extends ContentProvider {
-
-    MoviesDBHelper mMoviesDBHelper;
-
     public static final int ALL_FILM = 100;
     public static final int FILM_WITH_ID = 101;
+    private static final String TAG = "MoviesContentProvider";
     private static final UriMatcher sUriMatcher = buildUriMatcher();
+    MoviesDBHelper mMoviesDBHelper;
+
     public static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(MoviesContract.AUTHORITY, MoviesContract.PATH_TASKS, ALL_FILM);
@@ -34,6 +30,7 @@ public class MoviesContentProvider extends ContentProvider {
     public boolean onCreate() {
         Context context = getContext();
         mMoviesDBHelper = new MoviesDBHelper(context);
+        Log.d(TAG, "onCreate: Called.");
         return true;
     }
 
@@ -58,12 +55,14 @@ public class MoviesContentProvider extends ContentProvider {
         }
 
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        Log.d(TAG, "query: Called.");
         return cursor;
     }
 
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
+        Log.d(TAG, "getType: Called.");
         return null;
     }
 
@@ -87,6 +86,7 @@ public class MoviesContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
         getContext().getContentResolver().notifyChange(uri, null);
+        Log.d(TAG, "insert: Called.");
         return returnUri;
     }
 
@@ -115,11 +115,13 @@ public class MoviesContentProvider extends ContentProvider {
         if (numRowsDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
+        Log.d(TAG, "delete: Called.");
         return numRowsDeleted;
     }
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+        Log.d(TAG, "update: Called.");
         return 0;
     }
 }

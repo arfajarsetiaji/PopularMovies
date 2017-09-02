@@ -14,18 +14,11 @@ import java.util.List;
 
 import static com.android.volley.VolleyLog.TAG;
 
-/**
- * Created by Ar Fajar Setiaji on 27-Aug-17.
- */
-
-/**
- * Helper class untuk memudahkan saat berhubungan dengan SQLite database.
- */
-
 public class MoviesDBHelper extends SQLiteOpenHelper{
     private static final String DATABASE_NAME = "movies.db";
     private static final int DATABASEVERSION = 1;
 
+    @SuppressWarnings({"unused", "MismatchedReadAndWriteOfArray"})
     private static final String[] COLUMNS = {
             MoviesContract.MoviesEntry.COLUMN_MOVIE_ID,
             MoviesContract.MoviesEntry.COLUMN_ORIGINAL_LANGUAGE,
@@ -45,7 +38,6 @@ public class MoviesDBHelper extends SQLiteOpenHelper{
 
     private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " + MoviesContract.MoviesEntry.TABLE_NAME + " (" +
             MoviesContract.MoviesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            // "UNIQUE (" + MoviesContract.MoviesEntry.COLUMN_MOVIE_ID + ") ON CONFLICT REPLACE), " +
             MoviesContract.MoviesEntry.COLUMN_MOVIE_ID + " TEXT, " +
             MoviesContract.MoviesEntry.COLUMN_ORIGINAL_LANGUAGE + " TEXT, " +
             MoviesContract.MoviesEntry.COLUMN_ORIGINAL_TITLE + " TEXT, " +
@@ -67,26 +59,25 @@ public class MoviesDBHelper extends SQLiteOpenHelper{
 
     public MoviesDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASEVERSION);
+        Log.d(TAG, "MoviesDBHelper: Called.");
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(SQL_CREATE_ENTRIES);
+        Log.d(TAG, "onCreate: Called.");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         sqLiteDatabase.execSQL(SQL_DELETE_ENTRIES);
         onCreate(sqLiteDatabase);
+        Log.d(TAG, "onUpgrade: Called.");
     }
 
-    /**
-     * Fungsi fungsi CRUD SQLite secara langsung (tidak digunakan), apabila tidak menggunakan ContentProvider.
-     */
-
+    @SuppressWarnings("unused")
     public void insertMovie(Movie movie){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-
         ContentValues contentValues = new ContentValues();
         contentValues.put(MoviesContract.MoviesEntry.COLUMN_MOVIE_ID, movie.getMovieId());
         contentValues.put(MoviesContract.MoviesEntry.COLUMN_ORIGINAL_LANGUAGE, movie.getOriginalLanguage());
@@ -102,16 +93,14 @@ public class MoviesDBHelper extends SQLiteOpenHelper{
         contentValues.put(MoviesContract.MoviesEntry.COLUMN_VIDEO, movie.getVideo());
         contentValues.put(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH, movie.getPosterPath());
         contentValues.put(MoviesContract.MoviesEntry.COLUMN_BACKDROP_PATH, movie.getBackdropPath());
-
         sqLiteDatabase.insert(MoviesContract.MoviesEntry.TABLE_NAME, null, contentValues);
         sqLiteDatabase.close();
-
-        Log.d(TAG, "insertMovie: "+ movie.getOriginalTitle());
+        Log.d(TAG, "insertMovie: Called.");
     }
 
+    @SuppressWarnings("unused")
     public Movie getMovie(String movieId) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
-
         Cursor cursor = sqLiteDatabase.query(
                 MoviesContract.MoviesEntry.TABLE_NAME,
                 COLUMNS,
@@ -121,59 +110,59 @@ public class MoviesDBHelper extends SQLiteOpenHelper{
                 null,
                 null,
                 null);
-
-        if (cursor != null)
-            cursor.moveToFirst();
-
         Movie movie = new Movie();
-        movie.setMovieId(cursor.getString(0));
-        movie.setOriginalLanguage(cursor.getString(1));
-        movie.setOriginalTitle(cursor.getString(2));
-        movie.setTitle(cursor.getString(3));
-        movie.setGenreIds(cursor.getString(4));
-        movie.setReleaseDate(cursor.getString(5));
-        movie.setVoteCount(cursor.getString(6));
-        movie.setVoteAverage(cursor.getString(7));
-        movie.setPopularity(cursor.getString(8));
-        movie.setOverview(cursor.getString(9));
-        movie.setAdult(cursor.getString(10));
-        movie.setVideo(cursor.getString(11));
-        movie.setPosterPath(cursor.getString(12));
-        movie.setBackdropPath(cursor.getString(13));
-
-        Log.d(TAG, "getMovie: " + movie.getOriginalTitle());
+        if (cursor != null) {
+            cursor.moveToFirst();
+            movie.setMovieId(cursor.getString(0));
+            movie.setOriginalLanguage(cursor.getString(1));
+            movie.setOriginalTitle(cursor.getString(2));
+            movie.setTitle(cursor.getString(3));
+            movie.setGenreIds(cursor.getString(4));
+            movie.setReleaseDate(cursor.getString(5));
+            movie.setVoteCount(cursor.getString(6));
+            movie.setVoteAverage(cursor.getString(7));
+            movie.setPopularity(cursor.getString(8));
+            movie.setOverview(cursor.getString(9));
+            movie.setAdult(cursor.getString(10));
+            movie.setVideo(cursor.getString(11));
+            movie.setPosterPath(cursor.getString(12));
+            movie.setBackdropPath(cursor.getString(13));
+            cursor.close();
+        }
+        Log.d(TAG, "getMovie: Called.");
         return movie;
     }
 
+    @SuppressWarnings("unused")
     public List<Movie> getAllMovies() {
-        List<Movie> movies = new LinkedList<Movie>();
+        List<Movie> movies = new LinkedList<>();
         String query = "SELECT * FROM " + MoviesContract.MoviesEntry.TABLE_NAME;
-
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         Cursor cursor = sqLiteDatabase.rawQuery(query, null);
-
-        Movie movie = null;
-        if (cursor.moveToFirst()) {
-            do {
-                movie = new Movie();
-                movie.setMovieId(cursor.getString(1));
-                movie.setOriginalLanguage(cursor.getString(2));
-                movie.setOriginalTitle(cursor.getString(3));
-                movie.setTitle(cursor.getString(4));
-                movie.setGenreIds(cursor.getString(5));
-                movie.setReleaseDate(cursor.getString(6));
-                movie.setVoteCount(cursor.getString(7));
-                movie.setVoteAverage(cursor.getString(8));
-                movie.setPopularity(cursor.getString(9));
-                movie.setOverview(cursor.getString(10));
-                movie.setAdult(cursor.getString(11));
-                movie.setVideo(cursor.getString(12));
-                movie.setPosterPath(cursor.getString(13));
-                movie.setBackdropPath(cursor.getString(14));
-                movies.add(movie);
-            } while (cursor.moveToNext());
+        for (int i = 0; i < cursor.getCount(); i++) {
+            cursor.moveToFirst();
+            Movie movie = new Movie();
+            movie.setMovieId(cursor.getString(1));
+            movie.setOriginalLanguage(cursor.getString(2));
+            movie.setOriginalTitle(cursor.getString(3));
+            movie.setTitle(cursor.getString(4));
+            movie.setGenreIds(cursor.getString(5));
+            movie.setReleaseDate(cursor.getString(6));
+            movie.setVoteCount(cursor.getString(7));
+            movie.setVoteAverage(cursor.getString(8));
+            movie.setPopularity(cursor.getString(9));
+            movie.setOverview(cursor.getString(10));
+            movie.setAdult(cursor.getString(11));
+            movie.setVideo(cursor.getString(12));
+            movie.setPosterPath(cursor.getString(13));
+            movie.setBackdropPath(cursor.getString(14));
+            movies.add(movie);
+            if (i < cursor.getCount() - 1) {
+                cursor.moveToNext();
+            }
         }
-        Log.d(TAG, "getAllMovies: " + movies.toString());
+        cursor.close();
+        Log.d(TAG, "getAllMovies: Called.");
         return movies;
     }
 }

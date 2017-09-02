@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
           package="com.arfajarsetiaji.android.popularmovies">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -14,8 +13,8 @@
         android:supportsRtl="true">
         <activity
             android:name="com.arfajarsetiaji.android.popularmovies.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|screenSize">
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -23,17 +22,17 @@
         </activity>
         <activity
             android:name="com.arfajarsetiaji.android.popularmovies.DetailActivity"
+            android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_detail"
             android:parentActivityName="com.arfajarsetiaji.android.popularmovies.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|screenSize">
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.arfajarsetiaji.android.popularmovies.MainActivity"/>
         </activity>
         <provider
-            android:authorities="com.arfajarsetiaji.android.popularmovies"
             android:name="com.arfajarsetiaji.android.popularmovies.data.MoviesContentProvider"
+            android:authorities="com.arfajarsetiaji.android.popularmovies"
             android:exported="false"/>
     </application>
 

@@ -1,14 +1,7 @@
 package com.arfajarsetiaji.android.popularmovies.network;
 
 import android.net.Uri;
-
-/**
- * Created by Ar Fajar Setiaji on 29-Aug-17.
- */
-
-/**
- * Helper class untuk mempermudah saat berhubungan dengan network.
- */
+import android.util.Log;
 
 public class NetworkHelper {
     private static final String TAG = "NetworkHelper";
@@ -36,10 +29,6 @@ public class NetworkHelper {
     private static final String mParamPageKey = "page";
     private static final String mParamPageDefaultValue = "1";
 
-    /**
-     * Fungsi untuk membuat url JsonObject ImageUrlPrefix & Genre Id.
-     * */
-
     public static String getImageUrlPrefix() {
         Uri.Builder builder = new Uri.Builder();
         builder.scheme(mUriScheme)
@@ -47,7 +36,9 @@ public class NetworkHelper {
                 .appendPath(mPathImage0)
                 .appendPath(mPathImage1)
                 .appendPath(mPathImageSize);
-        return builder.build().toString();
+        String imageUrlPrefix = builder.build().toString();
+        Log.d(TAG, "getImageUrlPrefix: " + imageUrlPrefix);
+        return imageUrlPrefix;
     }
 
     public static String getGenreIdJsonObjectUrl() {
@@ -60,14 +51,10 @@ public class NetworkHelper {
                 .appendQueryParameter(mParamApikeyKey, mParamApikeyValue)
                 .appendQueryParameter(mParamLanguageKey, mParamLanguageDefaultValue)
                 .appendQueryParameter(mParamPageKey, mParamPageDefaultValue);
-        return builder.build().toString();
+        String genreIdJsonObjectUrl = builder.build().toString();
+        Log.d(TAG, "getGenreIdJsonObjectUrl: " + genreIdJsonObjectUrl);
+        return genreIdJsonObjectUrl;
     }
-
-    /**
-     * Fungsi untuk membuat url JsonObject Most Popular Movie & Top Rated Movie.
-     * Overload berdasarkan input paramLanguageValue & paramPageValue untuk kustomisasi
-     * (Pengembangan lebih lanjut).
-     * */
 
     public static String getMostPopularMovieJsonObjectUrl() {
         Uri.Builder builder = new Uri.Builder();
@@ -79,33 +66,9 @@ public class NetworkHelper {
                 .appendQueryParameter(mParamApikeyKey, mParamApikeyValue)
                 .appendQueryParameter(mParamLanguageKey, mParamLanguageDefaultValue)
                 .appendQueryParameter(mParamPageKey, mParamPageDefaultValue);
-        return builder.build().toString();
-    }
-
-    public static String getMostPopularMovieJsonObjectUrl(String paramPageValue) {
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme(mUriScheme)
-                .authority(mApiAuthority)
-                .appendPath(mAuthVersion)
-                .appendPath(mPathMovie)
-                .appendPath(mPathMostPopular)
-                .appendQueryParameter(mParamApikeyKey, mParamApikeyValue)
-                .appendQueryParameter(mParamLanguageKey, mParamLanguageDefaultValue)
-                .appendQueryParameter(mParamPageKey, paramPageValue);
-        return builder.build().toString();
-    }
-
-    public static String getMostPopularMovieJsonObjectUrl(String paramLanguageValue, String paramPageValue) {
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme(mUriScheme)
-                .authority(mApiAuthority)
-                .appendPath(mAuthVersion)
-                .appendPath(mPathMovie)
-                .appendPath(mPathMostPopular)
-                .appendQueryParameter(mParamApikeyKey, mParamApikeyValue)
-                .appendQueryParameter(mParamLanguageKey, paramLanguageValue)
-                .appendQueryParameter(mParamPageKey, paramPageValue);
-        return builder.build().toString();
+        String mostPopularMovieJsonObjectUrl = builder.build().toString();
+        Log.d(TAG, "getMostPopularMovieJsonObjectUrl: " + mostPopularMovieJsonObjectUrl);
+        return mostPopularMovieJsonObjectUrl;
     }
 
     public static String getTopRatedMovieJsonObjectUrl() {
@@ -118,38 +81,10 @@ public class NetworkHelper {
                 .appendQueryParameter(mParamApikeyKey, mParamApikeyValue)
                 .appendQueryParameter(mParamLanguageKey, mParamLanguageDefaultValue)
                 .appendQueryParameter(mParamPageKey, mParamPageDefaultValue);
-        return builder.build().toString();
+        String topRatedMovieJsonObjectUrl = builder.build().toString();
+        Log.d(TAG, "getTopRatedMovieJsonObjectUrl: " +topRatedMovieJsonObjectUrl);
+        return topRatedMovieJsonObjectUrl;
     }
-
-    public static String getTopRatedMovieJsonObjectUrl(String paramPageValue) {
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme(mUriScheme)
-                .authority(mApiAuthority)
-                .appendPath(mAuthVersion)
-                .appendPath(mPathMovie)
-                .appendPath(mPathTopRated)
-                .appendQueryParameter(mParamApikeyKey, mParamApikeyValue)
-                .appendQueryParameter(mParamLanguageKey, mParamLanguageDefaultValue)
-                .appendQueryParameter(mParamPageKey, paramPageValue);
-        return builder.build().toString();
-    }
-
-    public static String getTopRatedMovieJsonObjectUrl(String paramLanguageValue, String paramPageValue) {
-        Uri.Builder builder = new Uri.Builder();
-        builder.scheme(mUriScheme)
-                .authority(mApiAuthority)
-                .appendPath(mAuthVersion)
-                .appendPath(mPathMovie)
-                .appendPath(mPathTopRated)
-                .appendQueryParameter(mParamApikeyKey, mParamApikeyValue)
-                .appendQueryParameter(mParamLanguageKey, paramLanguageValue)
-                .appendQueryParameter(mParamPageKey, paramPageValue);
-        return builder.build().toString();
-    }
-
-    /**
-     * Fungsi untuk membuat url JsonObject Movie Videos & Movie Reviews.
-     * */
 
     public static String getMovieVideosJsonObjectUrl(String movieId) {
         Uri.Builder builder = new Uri.Builder();
@@ -160,7 +95,9 @@ public class NetworkHelper {
                 .appendPath(movieId)
                 .appendPath(mPathVideos)
                 .appendQueryParameter(mParamApikeyKey, mParamApikeyValue);
-        return builder.build().toString();
+        String movieVideosJsonObjectUrl = builder.build().toString();
+        Log.d(TAG, "getMovieVideosJsonObjectUrl: " + movieVideosJsonObjectUrl);
+        return movieVideosJsonObjectUrl;
     }
 
     public static String getMovieReviewsJsonObjectUrl(String movieId) {
@@ -172,6 +109,8 @@ public class NetworkHelper {
                 .appendPath(movieId)
                 .appendPath(mPathReviews)
                 .appendQueryParameter(mParamApikeyKey, mParamApikeyValue);
-        return builder.build().toString();
+        String movieReviewsJsonObjectUrl = builder.build().toString();
+        Log.d(TAG, "getMovieReviewsJsonObjectUrl: " + movieReviewsJsonObjectUrl);
+        return movieReviewsJsonObjectUrl;
     }
 }

@@ -1,6 +1,5 @@
 package com.arfajarsetiaji.android.popularmovies.fragment;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -18,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.arfajarsetiaji.android.popularmovies.MainApplication;
 import com.arfajarsetiaji.android.popularmovies.R;
 import com.arfajarsetiaji.android.popularmovies.adapter.FavoriteAdapter;
 import com.arfajarsetiaji.android.popularmovies.data.MoviesContract;
@@ -29,13 +29,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import static android.content.Context.MODE_PRIVATE;
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class FavoriteFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
     private static final String TAG = "FavoriteFragment";
+    private static final String KEY_FAVORITE_LAYOUT_TOP_VIEW = "FAVORITE_LAYOUT_TOP_VIEW";
+    private static final String KEY_FAVORITE_LAYOUT_POSITION_INDEX = "FAVORITE_LAYOUT_POSITION_INDEX";
     private static final int ID_FILM_LOADER = 100;
 
     HashSet<Movie> mMovieHashSet;
@@ -44,11 +41,16 @@ public class FavoriteFragment extends Fragment implements LoaderManager.LoaderCa
     GridLayoutManager mGridLayoutManager;
     RecyclerView mRecyclerView;
     ConstraintLayout mConstraintLayout;
-    private int mGridLayoutTopViewF;
-    private int mGridLayoutPositionIndexF;
+    private int mFavoriteLayoutTopView, mFavoriteLayoutPositionIndex;
 
     public FavoriteFragment() {
-        // Required empty public constructor
+        Log.d(TAG, "FavoriteFragment: Called.");
+    }
+
+    private void setupRecyclerViewLayout() {
+        mGridLayoutManager = new GridLayoutManager(getActivity(), 2);
+        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        Log.d(TAG, "setupRecyclerViewLayout: Called.");
     }
 
     @Override
@@ -56,7 +58,7 @@ public class FavoriteFragment extends Fragment implements LoaderManager.LoaderCa
                              Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.favorite_fragment, container, false);
         mRecyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
-        Log.d(TAG, "onCreateView: called");
+        Log.d(TAG, "onCreateView: Called.");
         return fragmentView;
     }
 
@@ -65,50 +67,37 @@ public class FavoriteFragment extends Fragment implements LoaderManager.LoaderCa
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mConstraintLayout = (ConstraintLayout) view.findViewById(R.id.constraint_layout);
         super.onViewCreated(view, savedInstanceState);
+        Log.d(TAG, "onViewCreated: Called.");
     }
 
     @Override
     public void onResume() {
         getActivity().getSupportLoaderManager().initLoader(ID_FILM_LOADER, null, this);
         try {
-            if (mGridLayoutPositionIndexF != -1) {
-                mGridLayoutManager.scrollToPositionWithOffset(mGridLayoutPositionIndexF, mGridLayoutTopViewF);
+            if (mFavoriteLayoutPositionIndex != -1) {
+                mGridLayoutManager.scrollToPositionWithOffset(mFavoriteLayoutPositionIndex, mFavoriteLayoutTopView);
             }
-        } catch (Exception e){
-
-        };
+        } catch (Exception ignored){
+        }
         super.onResume();
+        Log.d(TAG, "onResume: Called.");
     }
 
     @Override
     public void onPause() {
         try {
-            mGridLayoutPositionIndexF = mGridLayoutManager.findFirstVisibleItemPosition();
+            mFavoriteLayoutPositionIndex = mGridLayoutManager.findFirstVisibleItemPosition();
             View startView = mRecyclerView.getChildAt(0);
-            mGridLayoutTopViewF = (startView == null) ? 0 : (startView.getTop() - mRecyclerView.getPaddingTop());
+            mFavoriteLayoutTopView = (startView == null) ? 0 : (startView.getTop() - mRecyclerView.getPaddingTop());
 
-            SharedPreferences.Editor editor = getActivity().getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE).edit();
-            editor.putInt("mGridLayoutPositionIndexF", mGridLayoutPositionIndexF);
-            editor.putInt("mGridLayoutTopViewF", mGridLayoutTopViewF);
+            SharedPreferences.Editor editor = getActivity().getSharedPreferences(MainApplication.getNameMainPreference(), MainApplication.getModeMainPreferencePrivate()).edit();
+            editor.putInt(KEY_FAVORITE_LAYOUT_POSITION_INDEX, mFavoriteLayoutPositionIndex);
+            editor.putInt(KEY_FAVORITE_LAYOUT_TOP_VIEW, mFavoriteLayoutTopView);
             editor.apply();
-        } catch (Exception e) {
-
+        } catch (Exception ignored) {
         }
-
-
         super.onPause();
-        Log.d(TAG, "onPause: called");
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-
-    private void setupRecyclerViewLayout() {
-        mGridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mRecyclerView.setLayoutManager(mGridLayoutManager);
+        Log.d(TAG, "onPause: Called.");
     }
 
     @Override
@@ -116,9 +105,10 @@ public class FavoriteFragment extends Fragment implements LoaderManager.LoaderCa
         switch (id){
             case ID_FILM_LOADER:
                 Uri filmUri = MoviesContract.MoviesEntry.CONTENT_URI;
-                Log.d(TAG, "onCreateLoader: "+ filmUri.toString());
+                Log.d(TAG, "onCreateLoader: Called.");
                 return new CursorLoader(getActivity(), filmUri, null, null, null, null);
             default:
+                Log.d(TAG, "onCreateLoader: Called.");
                 throw new RuntimeException("Loader Not Implemented: " + id);
         }
     }
@@ -144,13 +134,11 @@ public class FavoriteFragment extends Fragment implements LoaderManager.LoaderCa
                 movie.setPosterPath(data.getString(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH)));
                 movie.setBackdropPath(data.getString(data.getColumnIndex(MoviesContract.MoviesEntry.COLUMN_BACKDROP_PATH)));
                 movie.setMovieImageUrlPrefix(NetworkHelper.getImageUrlPrefix());
-                // Gunakan Hashset, agar tidak ada data duplicate.
                 if (i == 0) {
                     mMovieHashSet = new HashSet<>();
                 }
                 mMovieHashSet.add(movie);
                 if (i == data.getCount() - 1) {
-                    // Convert HashSet ke list.
                     mMovieList = new ArrayList<>(mMovieHashSet);
                     Collections.sort(mMovieList);
                     mFavoriteAdapter = new FavoriteAdapter(getActivity(), mMovieList);
@@ -158,23 +146,16 @@ public class FavoriteFragment extends Fragment implements LoaderManager.LoaderCa
                     setupRecyclerViewLayout();
                     mFavoriteAdapter.notifyDataSetChanged();
                 }
-                Log.d(TAG, "onLoadFinished: Called");
             }
         } else {
-            // Gunakan layout kosong jika cursor kosong.
             mConstraintLayout.setVisibility(View.VISIBLE);
             mRecyclerView.setVisibility(View.INVISIBLE);
-            /*mMovieList = new ArrayList<>();
-            mFavoriteAdapter = new FavoriteAdapter(getActivity(), mMovieList);
-            mRecyclerView.setAdapter(mFavoriteAdapter);
-            setupRecyclerViewLayout();
-            mFavoriteAdapter.notifyDataSetChanged();*/
-            Log.d(TAG, "onLoadFinished: Favorite kosong");
         }
+        Log.d(TAG, "onLoadFinished: Called.");
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
+        Log.d(TAG, "onLoaderReset: Called.");
     }
 }

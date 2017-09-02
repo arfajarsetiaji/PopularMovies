@@ -1,26 +1,19 @@
 package com.arfajarsetiaji.android.popularmovies.system;
 
-/**
- * Created by Ar Fajar Setiaji on 29-Aug-17.
- */
-
 import android.content.Context;
 import android.content.Intent;
-
-/**
- * Helper class untuk mempermudah saat berhubungan dengan system.
- */
+import android.util.Log;
 
 public class SystemHelper {
+    private static final String TAG = "SystemHelper";
 
-    /**
-     * Fungsi untuk memeriksa apakah aplikasi Youtube terinstal di device.
-     */
     public static boolean youtubeInstalled(Context context) {
         Intent intent = context.getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
         if (intent != null) {
+            Log.d(TAG, "youtubeInstalled: True.");
             return true;
         } else {
+            Log.d(TAG, "youtubeInstalled: False");
             return false;
         }
     }

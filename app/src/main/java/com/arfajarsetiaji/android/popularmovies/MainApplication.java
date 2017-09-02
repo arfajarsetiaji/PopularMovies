@@ -2,6 +2,7 @@ package com.arfajarsetiaji.android.popularmovies;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -10,69 +11,48 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.arfajarsetiaji.android.popularmovies.network.NetworkHelper;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by Ar Fajar Setiaji on 29-Aug-17.
- **/
-
-/**
- * Register MainApplication di AndroidManifest menggunakan @param android:name.
- */
-
 public class MainApplication extends Application{
     private static final String TAG = "MainApplication";
+    private static final String NAME_MAIN_PREFERENCE = "MAIN_PREFERENCE";
+    private static final int MODE_MAIN_PREFERENCE_PRIVATE = 0x0000;
+    private static final String KEY_GENRE_INITIALIZED = "GENRE_INITIALIZED";
 
     private static RequestQueue sRequestQueue;
-    private static RequestManager sRequestManager;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+    public static RequestQueue getRequestQueue() {
+        return sRequestQueue;
+    }
+
+    public static String getNameMainPreference() {
+        return NAME_MAIN_PREFERENCE;
+    }
+
+    public static int getModeMainPreferencePrivate() {
+        return MODE_MAIN_PREFERENCE_PRIVATE;
+    }
+
+    private void initializeApplication() {
         sRequestQueue = Volley.newRequestQueue(getApplicationContext());
-        sRequestManager = Glide.with(getApplicationContext());
-
-        resetRecyclerViewPosition();
-
-        initializeGenre();
+        Log.d(TAG, "initializeApplication: Called.");
     }
-
-    private void resetRecyclerViewPosition() {
-        SharedPreferences.Editor editor = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE).edit();
-        editor.putInt("mGridLayoutPositionIndexMp", 0);
-        editor.putInt("mGridLayoutTopViewMp", 0);
-        editor.putInt("mGridLayoutPositionIndexTr", 0);
-        editor.putInt("mGridLayoutTopViewTr", 0);
-        editor.putInt("mGridLayoutPositionIndexF", 0);
-        editor.putInt("mGridLayoutTopViewF", 0);
-        editor.apply();
-    }
-
-    /**
-     * Set genre berdasarkan genre Id.
-     */
 
     private void initializeGenre() {
-        SharedPreferences mainPreferences = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE);
-        if (mainPreferences.getBoolean("DefaultGenreHasInitialized", false)) {
-            // Genre sudah pernah diinisialisasi sebelumnya.
-            // Mengambil JsonObject GenreId dari server, jika ada perubahan.
+        SharedPreferences mainPreferences = getSharedPreferences(getNameMainPreference(), getModeMainPreferencePrivate());
+        if (mainPreferences.getBoolean(KEY_GENRE_INITIALIZED, false)) {
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, NetworkHelper.getGenreIdJsonObjectUrl(), null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        // Ambil JsonArray dengan key "genres" dari response.
                         JSONArray arrayResults = response.getJSONArray("genres");
                         for (int i = 0; i < arrayResults.length(); i++) {
                             // Ambil JsonObject dari setiap anggota JsonArray.
                             JSONObject jsonObject = arrayResults.getJSONObject(i);
-                            // Simpan data genre di SharedPreferences.
-                            SharedPreferences.Editor editor = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE).edit();
+                            SharedPreferences.Editor editor = getSharedPreferences(getNameMainPreference(), getModeMainPreferencePrivate()).edit();
                             editor.putString("GENRE" + jsonObject.getString("id"), jsonObject.getString("name"));
                             editor.apply();
                         }
@@ -87,8 +67,7 @@ public class MainApplication extends Application{
             });
             getRequestQueue().add(jsonObjectRequest);
         } else{
-            // Inisialisasi value awal genre.
-            SharedPreferences.Editor editor = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE).edit();
+            SharedPreferences.Editor editor = getSharedPreferences(getNameMainPreference(), getModeMainPreferencePrivate()).edit();
             editor.putString("GENRE28", "Action");
             editor.putString("GENRE12", "Adventure");
             editor.putString("GENRE16", "Animation");
@@ -108,22 +87,41 @@ public class MainApplication extends Application{
             editor.putString("GENRE53", "Thriller");
             editor.putString("GENRE10752", "War");
             editor.putString("GENRE37", "Western");
-            editor.apply();
-            // Tandai bahwa genre sudah pernah diinisialisasi.
-            editor.putBoolean("DefaultGenreHasInitialized", true);
+            editor.putBoolean(KEY_GENRE_INITIALIZED, true);
             editor.apply();
         }
     }
 
-    /**
-     * Getter dari static Volley.RequestQueue & static Glide.RequestManager.
-     * */
-
-    public static RequestQueue getRequestQueue() {
-        return sRequestQueue;
+    private void resetRecyclerViewPosition() {
+        SharedPreferences.Editor editor = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE).edit();
+        editor.putInt("mGridLayoutPositionIndexMp", 0);
+        editor.putInt("mGridLayoutTopViewMp", 0);
+        editor.putInt("mGridLayoutPositionIndexTr", 0);
+        editor.putInt("mGridLayoutTopViewTr", 0);
+        editor.putInt("mGridLayoutPositionIndexF", 0);
+        editor.putInt("mGridLayoutTopViewF", 0);
+        editor.apply();
+        Log.d(TAG, "resetRecyclerViewPosition: Called.");
     }
 
-    public static RequestManager getRequestManager() {
-        return sRequestManager;
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        initializeApplication();
+        initializeGenre();
+        resetRecyclerViewPosition();
+        Log.d(TAG, "onCreate: Called.");
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        Log.d(TAG, "onLowMemory: Called.");
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        Log.d(TAG, "onTerminate: Called.");
     }
 }

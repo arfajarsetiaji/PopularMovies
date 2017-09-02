@@ -2,24 +2,22 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                app:titleTextColor="@color/white"
-                app:theme="@style/ToolbarWhiteIcon"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_scrollFlags="snap|enterAlways"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-        </android.support.design.widget.AppBarLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="snap|enterAlways"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ToolbarWhiteIcon"
+            app:titleTextColor="@color/white"/>
+    </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -31,8 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/bottom_navigation_view"
-            android:saveEnabled="true"
-            android:animateLayoutChanges="true">
+            android:animateLayoutChanges="true"
+            android:saveEnabled="true">
         </FrameLayout>
 
         <android.support.design.widget.BottomNavigationView
@@ -40,11 +38,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:saveEnabled="false"
             android:background="@color/white"
+            android:saveEnabled="false"
             app:elevation="@dimen/bottom_navigation_elevation"
-            app:theme="@style/AppTheme.BottomNavigation"
-            app:menu="@menu/menu_main_bottom_navigation"/>
+            app:menu="@menu/menu_main_bottom_navigation"
+            app:theme="@style/AppTheme.BottomNavigation"/>
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

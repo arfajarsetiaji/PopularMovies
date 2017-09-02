@@ -8,7 +8,6 @@
     tools:context="com.arfajarsetiaji.android.popularmovies.DetailActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
 
@@ -16,11 +15,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:theme="@style/ToolbarWhiteIcon"
-            app:titleTextColor="@color/white"
             android:background="?attr/colorPrimary"
             app:layout_scrollFlags="snap|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ToolbarWhiteIcon"
+            app:titleTextColor="@color/white"/>
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_detail"/>
@@ -30,9 +29,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
+        app:fabSize="normal"
         app:layout_anchor="@+id/detail_content"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_favorite_border"
-        app:fabSize="normal"/>
+        app:srcCompat="@drawable/ic_favorite_border"/>
 
 </android.support.design.widget.CoordinatorLayout>

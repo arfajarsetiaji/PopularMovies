@@ -1,5 +1,6 @@
 package com.arfajarsetiaji.android.popularmovies;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,6 +45,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "DetailActivity";
 
@@ -59,38 +61,27 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     Movie mMovie;
     JsonObjectRequest mMovieVideosJsonObjectRequest, mMovieReviewsJsonObjectRequest;
 
-    /**
-     * Inisialisasi awal activity.
-     */
-    
-    private void initialization() {
+    private void initializeActivity() {
         Bundle bundle = getIntent().getExtras();
         mMovie = bundle.getParcelable("MOVIE_DETAILS");
 
-        // JsonObjectRequest video dari Movie yang dipilih.
         mMovieVideosJsonObjectRequest =
-                new JsonObjectRequest(Request.Method.GET, NetworkHelper.getMovieVideosJsonObjectUrl(mMovie.getMovieId()), null, new Response.Listener<JSONObject>() {
+                new JsonObjectRequest(Request.Method.GET, NetworkHelper.getMovieVideosJsonObjectUrl(mMovie != null ? mMovie.getMovieId() : null), null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            // Ambil JsonArray dengan key "results".
                             JSONArray arrayResults = response.getJSONArray("results");
                             for (int i = 0; i < arrayResults.length(); i++) {
-                                // Buat JsonObject dari setiap anggota JsonArray.
                                 JSONObject jsonObject = arrayResults.getJSONObject(i);
-
-                                // Buat object MovieVideo dari setiap data video yang diambil dari JsonObject.
                                 MovieVideo movieVideo = new MovieVideo();
                                 movieVideo.setId(jsonObject.getString("id"));
                                 movieVideo.setIso_639_1(jsonObject.getString("iso_639_1"));
                                 movieVideo.setIso_3166_1(jsonObject.getString("iso_3166_1"));
                                 movieVideo.setKey(jsonObject.getString("key"));
                                 movieVideo.setName(jsonObject.getString("name"));
-                                movieVideo.setSite(jsonObject.getString("site"));
+                                movieVideo.setUrl(jsonObject.getString("site"));
                                 movieVideo.setSize(jsonObject.getString("size"));
                                 movieVideo.setType(jsonObject.getString("type"));
-
-                                // Isi List<MovieVideo> dengan data dari JsonObject.
                                 mMovieVideos.add(movieVideo);
                             }
                         } catch (JSONException e) {
@@ -104,26 +95,19 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 });
 
-        // JsonObjectRequest review dari Movie yang dipilih.
         mMovieReviewsJsonObjectRequest =
                 new JsonObjectRequest(Request.Method.GET, NetworkHelper.getMovieReviewsJsonObjectUrl(mMovie.getMovieId()), null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            // Ambil JsonArray dengan key "results".
                             JSONArray arrayResults = response.getJSONArray("results");
                             for (int i = 0; i < arrayResults.length(); i++) {
-                                // Buat JsonObject dari setiap anggota JsonArray.
                                 JSONObject jsonObject = arrayResults.getJSONObject(i);
-
-                                // Buat object MovieReview dari setiap data video yang diambil dari JsonObject.
                                 MovieReview movieReview = new MovieReview();
                                 movieReview.setId(jsonObject.getString("id"));
                                 movieReview.setAuthor(jsonObject.getString("author"));
                                 movieReview.setContent(jsonObject.getString("content"));
                                 movieReview.setUrl(jsonObject.getString("url"));
-
-                                // Isi List<MovieReview> dengan semua data dari JsonObject.
                                 mMovieReviews.add(movieReview);
                             }
                         } catch (JSONException e) {
@@ -139,16 +123,16 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
 
         RequestQueue requestQueue = Volley.newRequestQueue(DetailActivity.this);
-        // Request untuk mengambil JsonObject daftar video yang tersedia untuk Movie yang dipilih.
         requestQueue.add(mMovieVideosJsonObjectRequest);
-        // Request untuk mengambil JsonObject daftar review yang tersedia untuk Movie yang dipilih.
         requestQueue.add(mMovieReviewsJsonObjectRequest);
         
         setContentView(R.layout.activity_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(mMovie.getTitle());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(mMovie.getTitle());
+        }
 
         mFabFavorite = (FloatingActionButton) findViewById(R.id.fab);
         mTvPlaceholderBackdrop = (TextView) findViewById(R.id.tv_item_backdrop);
@@ -170,8 +154,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         mMovieVideos = new ArrayList<>();
         mMovieReviews = new ArrayList<>();
 
-        SharedPreferences mainPreferences = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE);
-        if (mainPreferences.getBoolean(mMovie.getMovieId() + "SudahAdaDiDatabase", false)) {
+        SharedPreferences mainPreferences = getSharedPreferences(MainApplication.getNameMainPreference(), MainApplication.getModeMainPreferencePrivate());
+        if (mainPreferences.getBoolean(mMovie.getMovieId() + "isFavorite", false)) {
             mFabFavorite.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this, R.drawable.ic_favorite_white));
         } else {
             mFabFavorite.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this, R.drawable.ic_favorite_border));
@@ -202,7 +186,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         mTvPlaceholderOverview.setText(mMovie.getOverview());
 
         String posterPath = mMovie.getPosterPath();
-        MainApplication.getRequestManager().load(posterPath).dontTransform().diskCacheStrategy(DiskCacheStrategy.SOURCE)
+        Glide.with(DetailActivity.this)
+                .load(posterPath).dontTransform().diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -217,29 +202,42 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 })
                 .into(mIvPlaceholderPoster);
+        Log.d(TAG, "initializeActivity: Called.");
     }
 
-    /**
-     * Fungsi untuk menampilkan daftar video yang tersedia untuk Movie yang dipilih.
-     */
+    private String getGenre() {
+        String allGenre = "";
+        String genreIds = mMovie.getGenreIds();
+        if (genreIds.length() > 3) {
+            genreIds = genreIds.substring(1, genreIds.length() - 1);
+        }
+        String[] genres = genreIds.split(",");
+        for (int i = 0; i < genres.length; i++) {
+            SharedPreferences mainPreferences = getSharedPreferences(MainApplication.getNameMainPreference(), MainApplication.getModeMainPreferencePrivate());
+            String genre = mainPreferences.getString("GENRE" + genres[i], "N/A");
+            if (i != genres.length - 1) {
+                genre = genre + ", ";
+            }
+            allGenre = allGenre + genre;
+        }
+        Log.d(TAG, "getGenre: Called.");
+        return allGenre;
+    }
+
     void setupVideoLinks() {
         int totalMovieVideos = mMovieVideos.size();
-        Log.d(TAG, "setupVideoLinks: " + totalMovieVideos);
         if (totalMovieVideos <= 0) {
-            // Tampilkan pesan saat tidak ada daftar video untuk Movie yang dipilih.
             mTvPlaceholderVideos.setText("No video for this movie.");
         } else {
-            // Ubah TextView status menjadi label title, jika ada video untuk Movie yang dipilih.
             mTvPlaceholderVideos.setAllCaps(true);
             mTvPlaceholderVideos.setText("Videos");
             for (int i = 0; i < totalMovieVideos; i++) {
-                // Ambil daftar video untuk Movie yang dipilih dan inflate menjadi Button.
                 final MovieVideo movieVideo = mMovieVideos.get(i);
-                if (movieVideo.getSite().equals("YouTube")) {
+                if (movieVideo.getUrl().equals("YouTube")) {
                     LayoutInflater layoutInflater = LayoutInflater.from(DetailActivity.this);
+                    @SuppressLint("InflateParams")
                     Button button = (Button) layoutInflater.inflate(R.layout.button_video, null, false);
                     button.setText("[" + movieVideo.getType() + "] " + movieVideo.getName());
-                    // Buka video menggunakan aplikasi Youtube (jika terinstall) / browser / app yang kompatibel, jika di-click.
                     button.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -254,66 +252,29 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                             }
                         }
                     });
-                    // Tambahkan setiap Button video ke dalam vertical LinearLayout sebagai child view.
                     mLlPlaceholderVideos.addView(button);
                 }
             }
         }
+        Log.d(TAG, "setupVideoLinks: Called.");
     }
 
-    /**
-     * Fungsi untuk menampilkan daftar review yang tersedia untuk Movie yang dipilih.
-     */
-    private void setupReviews() {
+    void setupReviews() {
         int totalMovieReviews = mMovieReviews.size();
-        Log.d(TAG, "setupReviews: " + totalMovieReviews);
         if (totalMovieReviews <= 0) {
-            // Tampilkan pesan pada TextView status jika tidak ada review untuk Movie yang dipilih.
             mTvPlaceholderReviews.setText("No reviews for this movie.");
         } else {
-            // Hilangkan TextView status jika ada review untuk Movie yang dipilih.
             mTvPlaceholderReviews.setVisibility(View.GONE);
             for (int i = 0; i < totalMovieReviews; i++) {
-                // Buat TextView untuk setiap review.
                 final MovieReview movieReview = mMovieReviews.get(i);
                 LayoutInflater layoutInflater = LayoutInflater.from(DetailActivity.this);
+                @SuppressLint("InflateParams")
                 TextView textView = (TextView) layoutInflater.inflate(R.layout.tv_row_column, null, false);
                 textView.setText(movieReview.getContent());
-                // Tambahkan setiap TextView review ke dalam vertical LinearLayout sebagai child view.
                 mLlPlaceholderReview.addView(textView);
             }
         }
-    }
-
-    /**
-     * Fungsi untuk menampilkan daftar genre untuk Movie yang dipilih.
-     */
-
-    private String getGenre() {
-        String allGenre = "";
-        String genreIds = mMovie.getGenreIds();
-        if (genreIds.length() > 3) {
-            genreIds = genreIds.substring(1, genreIds.length() - 1);
-        }
-        String[] genres = genreIds.split(",");
-        for (int i = 0; i < genres.length; i++) {
-            SharedPreferences mainPreferences = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE);
-            String genre = mainPreferences.getString("GENRE" + genres[i], "N/A");
-            if (i != genres.length - 1) {
-                genre = genre + ", ";
-            }
-            allGenre = allGenre + genre;
-        }
-        return allGenre;
-    }
-
-    /**
-     * Fungsi untuk menambah & menghapus Movie ke / dari database.
-     */
-
-    private void deleteFromDatabase() {
-        getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(mMovie.getMovieId())).build(), null, null);
-        Snackbar.make(mFabFavorite, "Deleted drom favorite!", Snackbar.LENGTH_SHORT).show();
+        Log.d(TAG, "setupReviews: Called.");
     }
 
     private void addToDatabase() {
@@ -332,55 +293,101 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         contentValues.put(MoviesContract.MoviesEntry.COLUMN_VIDEO, mMovie.getVideo());
         contentValues.put(MoviesContract.MoviesEntry.COLUMN_POSTER_PATH, mMovie.getPosterPath());
         contentValues.put(MoviesContract.MoviesEntry.COLUMN_BACKDROP_PATH, mMovie.getBackdropPath());
-
         getContentResolver().insert(MoviesContract.MoviesEntry.CONTENT_URI, contentValues);
         Snackbar.make(mFabFavorite, "Added to favorite!", Snackbar.LENGTH_SHORT).show();
+        Log.d(TAG, "addToDatabase: Called.");
     }
 
-    /**
-     * Override fungsi- fungsi activity lifecycle.
-     */
-    
+    private void deleteFromDatabase() {
+        getContentResolver().delete(MoviesContract.MoviesEntry.CONTENT_URI.buildUpon().appendPath(String.valueOf(mMovie.getMovieId())).build(), null, null);
+        Snackbar.make(mFabFavorite, "Deleted drom favorite!", Snackbar.LENGTH_SHORT).show();
+        Log.d(TAG, "deleteFromDatabase: Called.");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initialization();
+        initializeActivity();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart: Called.");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: Called.");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d(TAG, "onRestoreInstanceState: Called.");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: Called.");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: Called.");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState: Called.");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: Called.");
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(TAG, "onDestroy: Called.");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.d(TAG, "onConfigurationChanged: Called.");
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab:
-                String key = mMovie.getMovieId() + "SudahAdaDiDatabase";
-                SharedPreferences mainPreferences = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE);
-                Boolean sudahAdaDiDatabase = mainPreferences.getBoolean(key, false);
+                String key = mMovie.getMovieId() + "isFavorite";
+                SharedPreferences mainPreferences = getSharedPreferences(MainApplication.getNameMainPreference(), MainApplication.getModeMainPreferencePrivate());
+                Boolean isFavorite = mainPreferences.getBoolean(key, false);
                 Log.d(TAG, "onClick: fab clicked");
-                if (sudahAdaDiDatabase) {
+                if (isFavorite) {
                     deleteFromDatabase();
-                    Log.d(TAG, "onClick: delete from db");
-                    SharedPreferences.Editor editor = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE).edit();
+                    SharedPreferences.Editor editor = getSharedPreferences(MainApplication.getNameMainPreference(), MainApplication.getModeMainPreferencePrivate()).edit();
                     editor.putBoolean(key, false);
                     editor.apply();
                     mFabFavorite.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this, R.drawable.ic_favorite_border));
+                    Log.d(TAG, "onClick: Called.");
                 } else {
                     addToDatabase();
-                    Log.d(TAG, "onClick: add to db");
-                    SharedPreferences.Editor editor = getSharedPreferences("MAIN_PREFERENCES", MODE_PRIVATE).edit();
+                    SharedPreferences.Editor editor = getSharedPreferences(MainApplication.getNameMainPreference(), MainApplication.getModeMainPreferencePrivate()).edit();
                     editor.putBoolean(key, true);
                     editor.apply();
                     mFabFavorite.setImageDrawable(ContextCompat.getDrawable(DetailActivity.this, R.drawable.ic_favorite_white));
+                    Log.d(TAG, "onClick: Called.");
                 }
-
                 break;
         }
-    }
-
-    /**
-     * Override fungsi - fungsi callback.
-     */
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
     }
 }

@@ -22,11 +22,11 @@ public class NetworkHelper {
     private static final String mPathImage1 = "p";
     private static final String mPathImageSize = "w500";
 
-    private static final String mParamApikeyKey = "api_key";
-    private static final String mParamApikeyValue = "INSERT_YOUR_OWN_API_KEY_HERE";
-    private static final String mParamLanguageKey = "language";
+    private static final String mParamApiKeyName = "api_key";
+    private static final String mParamApiKeyValue = "REPLACE_WITH_YOUR_OWN_API_KEY";
+    private static final String mParamLanguageName = "language";
     private static final String mParamLanguageDefaultValue = "en-US";
-    private static final String mParamPageKey = "page";
+    private static final String mParamPageName = "page";
     private static final String mParamPageDefaultValue = "1";
 
     public static String getImageUrlPrefix() {
@@ -48,9 +48,9 @@ public class NetworkHelper {
                 .appendPath(mAuthVersion)
                 .appendPath(mPathGenre)
                 .appendPath(mPathList)
-                .appendQueryParameter(mParamApikeyKey, mParamApikeyValue)
-                .appendQueryParameter(mParamLanguageKey, mParamLanguageDefaultValue)
-                .appendQueryParameter(mParamPageKey, mParamPageDefaultValue);
+                .appendQueryParameter(mParamApiKeyName, mParamApiKeyValue)
+                .appendQueryParameter(mParamLanguageName, mParamLanguageDefaultValue)
+                .appendQueryParameter(mParamPageName, mParamPageDefaultValue);
         String genreIdJsonObjectUrl = builder.build().toString();
         Log.d(TAG, "getGenreIdJsonObjectUrl: " + genreIdJsonObjectUrl);
         return genreIdJsonObjectUrl;
@@ -63,9 +63,9 @@ public class NetworkHelper {
                 .appendPath(mAuthVersion)
                 .appendPath(mPathMovie)
                 .appendPath(mPathMostPopular)
-                .appendQueryParameter(mParamApikeyKey, mParamApikeyValue)
-                .appendQueryParameter(mParamLanguageKey, mParamLanguageDefaultValue)
-                .appendQueryParameter(mParamPageKey, mParamPageDefaultValue);
+                .appendQueryParameter(mParamApiKeyName, mParamApiKeyValue)
+                .appendQueryParameter(mParamLanguageName, mParamLanguageDefaultValue)
+                .appendQueryParameter(mParamPageName, mParamPageDefaultValue);
         String mostPopularMovieJsonObjectUrl = builder.build().toString();
         Log.d(TAG, "getMostPopularMovieJsonObjectUrl: " + mostPopularMovieJsonObjectUrl);
         return mostPopularMovieJsonObjectUrl;
@@ -78,9 +78,9 @@ public class NetworkHelper {
                 .appendPath(mAuthVersion)
                 .appendPath(mPathMovie)
                 .appendPath(mPathTopRated)
-                .appendQueryParameter(mParamApikeyKey, mParamApikeyValue)
-                .appendQueryParameter(mParamLanguageKey, mParamLanguageDefaultValue)
-                .appendQueryParameter(mParamPageKey, mParamPageDefaultValue);
+                .appendQueryParameter(mParamApiKeyName, mParamApiKeyValue)
+                .appendQueryParameter(mParamLanguageName, mParamLanguageDefaultValue)
+                .appendQueryParameter(mParamPageName, mParamPageDefaultValue);
         String topRatedMovieJsonObjectUrl = builder.build().toString();
         Log.d(TAG, "getTopRatedMovieJsonObjectUrl: " +topRatedMovieJsonObjectUrl);
         return topRatedMovieJsonObjectUrl;
@@ -94,7 +94,7 @@ public class NetworkHelper {
                 .appendPath(mPathMovie)
                 .appendPath(movieId)
                 .appendPath(mPathVideos)
-                .appendQueryParameter(mParamApikeyKey, mParamApikeyValue);
+                .appendQueryParameter(mParamApiKeyName, mParamApiKeyValue);
         String movieVideosJsonObjectUrl = builder.build().toString();
         Log.d(TAG, "getMovieVideosJsonObjectUrl: " + movieVideosJsonObjectUrl);
         return movieVideosJsonObjectUrl;
@@ -108,7 +108,7 @@ public class NetworkHelper {
                 .appendPath(mPathMovie)
                 .appendPath(movieId)
                 .appendPath(mPathReviews)
-                .appendQueryParameter(mParamApikeyKey, mParamApikeyValue);
+                .appendQueryParameter(mParamApiKeyName, mParamApiKeyValue);
         String movieReviewsJsonObjectUrl = builder.build().toString();
         Log.d(TAG, "getMovieReviewsJsonObjectUrl: " + movieReviewsJsonObjectUrl);
         return movieReviewsJsonObjectUrl;

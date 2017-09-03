@@ -38,18 +38,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         if (savedInstanceState != null) {
             switch (savedInstanceState.getInt(KEY_DISPLAYED_FRAGMENT_ID)) {
                 case 0:
-                    View mostPopularFragment = mBottomNavigationView.findViewById(R.id.action_top_rated_movies);
+                    View mostPopularFragment = mBottomNavigationView.findViewById(R.id.action_most_popular_movies);
                     mostPopularFragment.performClick();
                     break;
                 case 1:
-                    View topRatedFragment = mBottomNavigationView.findViewById(R.id.action_favorite_movies);
+                    View topRatedFragment = mBottomNavigationView.findViewById(R.id.action_top_rated_movies);
                     topRatedFragment.performClick();
                     break;
                 case 2:
-                    View favoriteFaragment = mBottomNavigationView.findViewById(R.id.action_most_popular_movies);
-                    favoriteFaragment.performClick();
+                    View favoriteFragment = mBottomNavigationView.findViewById(R.id.action_favorite_movies);
+                    favoriteFragment.performClick();
                     break;
             }
+        } else {
+            View mostPopularFragment = mBottomNavigationView.findViewById(R.id.action_most_popular_movies);
+            mostPopularFragment.performClick();
         }
         Log.d(TAG, "initializeActivity: Called.");
     }

@@ -1,48 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="snap|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ToolbarWhiteIcon"
-            app:titleTextColor="@color/white"/>
-    </android.support.design.widget.AppBarLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize">
-
-        <FrameLayout
-            android:id="@+id/frame_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/bottom_navigation_view"
-            android:animateLayoutChanges="true"
-            android:saveEnabled="true">
-        </FrameLayout>
-
-        <android.support.design.widget.BottomNavigationView
-            android:id="@+id/bottom_navigation_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:saveEnabled="false"
-            app:elevation="@dimen/bottom_navigation_elevation"
-            app:menu="@menu/menu_main_bottom_navigation"
-            app:theme="@style/AppTheme.BottomNavigation"/>
-    </RelativeLayout>
-
-</android.support.design.widget.CoordinatorLayout>
+<?xml version="1.0" encoding="utf-8"?><android.support.design.widget.CoordinatorLayout    xmlns:android="http://schemas.android.com/apk/res/android"    xmlns:app="http://schemas.android.com/apk/res-auto"    android:layout_width="match_parent"    android:layout_height="match_parent">    <android.support.design.widget.AppBarLayout        android:layout_width="match_parent"        android:layout_height="wrap_content">        <android.support.v7.widget.Toolbar            android:id="@+id/toolbar"            android:layout_width="match_parent"            android:layout_height="?attr/actionBarSize"            app:layout_scrollFlags="snap|enterAlways"            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"            app:theme="@style/ToolbarWhiteIcon"            app:titleTextColor="@color/white"/>    </android.support.design.widget.AppBarLayout>    <RelativeLayout        android:layout_width="match_parent"        android:layout_height="match_parent"        android:layout_marginTop="?attr/actionBarSize">        <FrameLayout            android:id="@+id/frame_layout"            android:layout_width="match_parent"            android:layout_height="match_parent"            android:layout_above="@+id/bottom_navigation_view"            android:animateLayoutChanges="true"            android:saveEnabled="true">        </FrameLayout>        <android.support.design.widget.BottomNavigationView            android:id="@+id/bottom_navigation_view"            android:layout_width="match_parent"            android:layout_height="wrap_content"            android:layout_alignParentBottom="true"            android:background="@color/white"            android:saveEnabled="false"            app:elevation="@dimen/bottom_navigation_elevation"            app:menu="@menu/menu_main_bottom_navigation"            app:theme="@style/AppTheme.BottomNavigation"/>    </RelativeLayout></android.support.design.widget.CoordinatorLayout>

@@ -56,8 +56,8 @@ public class FavoriteFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.favorite_fragment, container, false);
-        mRecyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
+        View fragmentView = inflater.inflate(R.layout.main_fragment_favorite, container, false);
+        mRecyclerView = (RecyclerView) inflater.inflate(R.layout.main_recycler_view, container, false);
         Log.d(TAG, "onCreateView: Called.");
         return fragmentView;
     }

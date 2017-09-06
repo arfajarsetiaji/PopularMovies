@@ -1,19 +1,1 @@
-<resources>
-    <!-- Application. -->
-    <string name="app_name">Popular Movies</string>
-
-    <!-- Activity. -->
-    <string name="title_activity_detail">DetailActivity</string>
-
-    <!-- Label. -->
-    <string name="label_original_title">Original Title</string>
-
-    <!-- Message. -->
-    <string name="item_loading_message">(Loading...)</string>
-
-    <!-- Bottom Navigation View-->
-    <string name="label_most_popular">Most Popular</string>
-    <string name="label_top_rated">Top Rated</string>
-    <string name="label_favorite">Favorite</string>
-
-</resources>
+<resources>    <!-- Application. -->    <string name="app_name">Popular Movies</string>    <!-- Activity. -->    <string name="title_activity_detail">DetailActivity</string>    <!-- Label. -->    <string name="label_original_title">Original Title</string>    <!-- Message. -->    <string name="item_loading_message">(Loading...)</string>    <!-- Bottom Navigation View-->    <string name="label_most_popular">Most Popular</string>    <string name="label_top_rated">Top Rated</string>    <string name="label_favorite">Favorite</string></resources>

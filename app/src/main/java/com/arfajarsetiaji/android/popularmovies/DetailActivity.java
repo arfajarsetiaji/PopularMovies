@@ -236,7 +236,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 if (movieVideo.getUrl().equals("YouTube")) {
                     LayoutInflater layoutInflater = LayoutInflater.from(DetailActivity.this);
                     @SuppressLint("InflateParams")
-                    Button button = (Button) layoutInflater.inflate(R.layout.button_video, null, false);
+                    Button button = (Button) layoutInflater.inflate(R.layout.detail_content_card_3_button_video, null, false);
                     button.setText("[" + movieVideo.getType() + "] " + movieVideo.getName());
                     button.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -269,7 +269,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 final MovieReview movieReview = mMovieReviews.get(i);
                 LayoutInflater layoutInflater = LayoutInflater.from(DetailActivity.this);
                 @SuppressLint("InflateParams")
-                TextView textView = (TextView) layoutInflater.inflate(R.layout.tv_row_column, null, false);
+                TextView textView = (TextView) layoutInflater.inflate(R.layout.detail_content_card_4_text_reviews, null, false);
                 textView.setText(movieReview.getContent());
                 mLlPlaceholderReview.addView(textView);
             }

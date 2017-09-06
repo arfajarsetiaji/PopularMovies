@@ -47,7 +47,7 @@ public class TopRatedFragment extends Fragment {
     }
 
     private void initializeFragment(LayoutInflater inflater, ViewGroup container) {
-        mRecyclerView = (RecyclerView) inflater.inflate(R.layout.recycler_view, container, false);
+        mRecyclerView = (RecyclerView) inflater.inflate(R.layout.main_recycler_view, container, false);
         mMovies = new ArrayList<>();
         mMovieGridAdapter = new MovieGridAdapter(getActivity(), mMovies);
         mJsonObjectRequest =

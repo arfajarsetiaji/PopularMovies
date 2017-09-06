@@ -1,8 +1,1 @@
-<resources>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="grid_side_margin">8dp</dimen>
-    <dimen name="keylines">16dp</dimen>
-
-    <dimen name="poster_height">233dp</dimen>
-    <dimen name="bottom_navigation_elevation">16dp</dimen>
-</resources>
+<resources>    <dimen name="fab_margin">16dp</dimen>    <dimen name="grid_side_margin">8dp</dimen>    <dimen name="keylines">16dp</dimen>    <dimen name="poster_height">233dp</dimen>    <dimen name="bottom_navigation_elevation">16dp</dimen></resources>

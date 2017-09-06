@@ -1,15 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/action_most_popular_movies"
-        android:icon="@drawable/ic_trending_up"
-        android:title="@string/label_most_popular"/>
-    <item
-        android:id="@+id/action_top_rated_movies"
-        android:icon="@drawable/ic_star"
-        android:title="@string/label_top_rated"/>
-    <item
-        android:id="@+id/action_favorite_movies"
-        android:icon="@drawable/ic_favorite"
-        android:title="@string/label_favorite"/>
-</menu>
+<?xml version="1.0" encoding="utf-8"?><menu xmlns:android="http://schemas.android.com/apk/res/android">    <item        android:id="@+id/action_most_popular_movies"        android:icon="@drawable/ic_trending_up"        android:title="@string/label_most_popular"/>    <item        android:id="@+id/action_top_rated_movies"        android:icon="@drawable/ic_star"        android:title="@string/label_top_rated"/>    <item        android:id="@+id/action_favorite_movies"        android:icon="@drawable/ic_favorite"        android:title="@string/label_favorite"/></menu>
